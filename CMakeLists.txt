@@ -3,9 +3,11 @@ project(untitled)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(untitled algorithms/main.cpp
-        algorithms/vec3.h
-        algorithms/add.cpp
-        chpt8/dowhile.cpp
+add_executable(untitled algorithms/matriceXbyY.cpp
+        chapters/chapter8/doWhile.cpp
         experiments/pattern_print.cpp
-        chpt8/while.cpp)
+        chapters/chapter8/while.cpp)
+
+add_executable(tictactoe
+        tic-tac-toe/tictactoe.cpp
+        tic-tac-toe/tictactoeLogic.cpp)

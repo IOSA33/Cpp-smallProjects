@@ -1,8 +1,4 @@
 #include <iostream>
-#include "vec3.h"
-
-
-
 
 int main() {
     int outer{ 1 };

@@ -1,6 +1,6 @@
 #include <iostream>
 
-int main( ) {
+int main() {
     int selection{};
 
     while (selection < 1 || selection > 4) {
