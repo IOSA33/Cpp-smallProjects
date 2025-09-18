@@ -4,27 +4,25 @@
 #include <iostream>
 #include <bits/ostream.tcc>
 
-void printTable(int arr[][3]);
+void printTable(int arr[][3], int);
 int updateTable(int arr[][3], int, int);
+
+constexpr int rowsGame{3};
 
 int main() {
     std:: cout << "Hello it is a mini game tic-tac-toe:"<< "\n";
-
     int array[3][3] = {{0,0,0}, {0,0,0}, {0,0,0}};
+    printTable(array, rowsGame);
 
     while (true) {
-        std::cout << "Enter a number for X and Y, format (3 3):" << "\n";
-
-        printTable(array);
-
+        std::cout << "Enter a number for X and Y, format (0 2):" << "\n";
         int inputX{};
         int inputY{};
         std::cin >> inputX >> inputY;
 
-        if (inputX >= 0 && inputY >= 0 && inputX < 4 && inputY < 4) {
+        if (inputX >= 0 && inputY >= 0 && inputX < 3 && inputY < 3) {
             updateTable(array, inputX, inputY);
-            printTable(array);
-
+            printTable(array, rowsGame);
         } else {
             std::cout<< "Invalid input! Try again! \n";
             std::cin.clear();
@@ -37,19 +35,18 @@ int main() {
     return 0;
 }
 
-void printTable(int arr[][3]) {
-    int size = sizeof(arr) / sizeof(arr[0][0]);
-
-    for (int i = 0; i <= size; i++) {
-        for (int j = 0; j <= size; j++) {
+void printTable(int arr[][3], const int rows) {
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < rows; j++) {
             std::cout << arr[i][j]<< " ";
         }
         std::cout << std::endl;
     }
 }
 
-int updateTable(int* arr[][3], int inputX, int inputY) {
-
-
+int updateTable(int arr[][3], int inputX, int inputY) {
+    if (inputX >= 0 && inputY >= 0 && inputX < 3 && inputY < 3) {
+        return arr[inputX][inputY] = 1;
+    }
     return 0;
 }
