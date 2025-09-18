@@ -25,8 +25,7 @@ int main() {
                 } else {
                     std::cout << "XX" << " ";
                 }
-            } else if (
-                inner == outer) {
+            } else if (inner == outer) {
                 std::cout << inner << " ";
             } else if (inner < outer) {
                 while (inner >= 1) {
@@ -34,7 +33,9 @@ int main() {
                     inner--;
                 }
             }
-            if (inner <= 1) { std::cout << "\n"; }
+            if (inner <= 1) {
+                std::cout << "\n";
+            }
             --inner;
         }
         ++outer;
