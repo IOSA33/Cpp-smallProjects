@@ -2,16 +2,23 @@
 #include <iostream>
 #include <bits/ostream.tcc>
 #include <random>
-#include <ctime>
-
 
 void printTable(int arr[][3], int rows);
 int updateTable(int arr[][3], int inputX, int inputY, int value);
-bool checkRobotArray(int arr[][3], int inputX, int inputY);
+bool checkInputArray(int arr[][3], int inputX, int inputY);
 
 constexpr int rowsGame{3};
 constexpr int valuePlayer{1};
 constexpr int valueRobot{5};
+
+constexpr int outOfArrayX{0};
+constexpr int outOfArrayY{0};
+constexpr int outOfArrayX1{3};
+constexpr int outOfArrayY1{3};
+
+constexpr int exitGameX{10};
+constexpr int exitGameY{10};
+
 
 int main() {
     std:: cout << "Hello it is a mini game tic-tac-toe:"<< "\n";
@@ -21,14 +28,17 @@ int main() {
     printTable(array, rowsGame);
 
     while (true) {
-        std::cout << "Enter a number for X and Y, format (0 2):" << "\n";
         // User inputs
         int inputX{};
         int inputY{};
-        std::cin >> inputX >> inputY;
+
+        do {
+            std::cout << "Enter a number for X and Y, format (0 2):" << "\n";
+            std::cin >> inputX >> inputY;
+        } while (!checkInputArray(array, inputX, inputY));
 
         // Game starts
-        if (inputX >= 0 && inputY >= 0 && inputX < 3 && inputY < 3) {
+        if (inputX >= outOfArrayX && inputY >= outOfArrayY && inputX < outOfArrayX1 && inputY < outOfArrayY1) {
             // Users move, and print table after input
             updateTable(array, inputX, inputY , valuePlayer);
             printTable(array, rowsGame);
@@ -37,6 +47,7 @@ int main() {
             int inputX1{};
             int inputY2{};
 
+            std::cout << "Robot thinking!\n";
             // Check for robots input
             do {
                 std::cout << "Robot thinking again!\n";
@@ -47,7 +58,7 @@ int main() {
 
                 inputX1 = dist(gen);
                 inputY2 = dist(gen);
-            } while (!checkRobotArray(array, inputX1, inputY2));
+            } while (!checkInputArray(array, inputX1, inputY2));
 
             // Updating table and printing it again
             std::cout << "Robot makes move" << std::endl;
@@ -66,12 +77,13 @@ int main() {
             std::cin.ignore(1000, '\n');
         }
 
-        if (inputX == 10 || inputY == 10) {
+        // For exit the game
+        if (inputX == exitGameX || inputY == exitGameY) {
             break;
         }
     }
 
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 // Printing current state of the game (array) for console
@@ -93,9 +105,10 @@ int updateTable(int arr[][3], const int inputX, const int inputY, int value) {
 }
 
 // Checking is robots move is on top
-bool checkRobotArray(int arr[][3], const int inputX, const int inputY) {
+bool checkInputArray(int arr[][3], const int inputX, const int inputY) {
     if (arr[inputX][inputY] == 1 || arr[inputX][inputY] == 5) {
         return false;
     }
     return true;
 }
+
