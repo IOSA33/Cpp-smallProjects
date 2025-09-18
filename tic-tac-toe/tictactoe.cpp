@@ -7,6 +7,7 @@
 
 void printTable(int arr[][3], int rows);
 int updateTable(int arr[][3], int inputX, int inputY, int value);
+bool checkRobotArray(int arr[][3], int inputX, int inputY);
 
 constexpr int rowsGame{3};
 constexpr int valuePlayer{1};
@@ -36,20 +37,29 @@ int main() {
             int inputX1{};
             int inputY2{};
 
-            // Random generator for robot by random library
-            std::random_device rd;
-            std::mt19937 gen(rd());
-            std::uniform_int_distribution<> dist(0, 2);
+            // Check for robots input
+            do {
+                std::cout << "Robot thinking again!\n";
+                // Random generator for robot by random library
+                std::random_device rd;
+                std::mt19937 gen(rd());
+                std::uniform_int_distribution<> dist(0, 2);
 
-            inputX1 = dist(gen);
-            inputY2 = dist(gen);
+                inputX1 = dist(gen);
+                inputY2 = dist(gen);
+            } while (!checkRobotArray(array, inputX1, inputY2));
 
             // Updating table and printing it again
             std::cout << "Robot makes move" << std::endl;
             std::cout << "My move is " << inputX1 << " " << inputY2 << "\n";
 
+            // TODO: Check for winning
+
             updateTable(array, inputX1, inputY2, valueRobot);
             printTable(array, rowsGame);
+
+            // TODO: Check for winning
+
         } else {
             std::cout<< "Invalid input! Try again! \n";
             std::cin.clear();
@@ -64,6 +74,7 @@ int main() {
     return 0;
 }
 
+// Printing current state of the game (array) for console
 void printTable(int arr[][3], const int rows) {
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < rows; j++) {
@@ -73,9 +84,18 @@ void printTable(int arr[][3], const int rows) {
     }
 }
 
+// Updating table after users and robots input
 int updateTable(int arr[][3], const int inputX, const int inputY, int value) {
     if (inputX >= 0 && inputY >= 0 && inputX < 3 && inputY < 3) {
         return arr[inputX][inputY] = value;
     }
     return 0;
+}
+
+// Checking is robots move is on top
+bool checkRobotArray(int arr[][3], const int inputX, const int inputY) {
+    if (arr[inputX][inputY] == 1 || arr[inputX][inputY] == 5) {
+        return false;
+    }
+    return true;
 }
