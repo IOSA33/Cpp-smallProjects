@@ -24,6 +24,11 @@ int main() {
     printTable(array, rowsGame);
 
     while (true) {
+        if (isFull(array)) {
+            std::cout << "Table is full" << std::endl;
+            break;
+        }
+
         // User inputs
         int inputX{};
         int inputY{};
@@ -36,7 +41,7 @@ int main() {
         do {
             std::cout << "Enter a number for X and Y, example (0 2):" << "\n";
             std::cin >> inputX >> inputY;
-        } while (!checkInputArray(array, inputX, inputY));
+        } while (!checkInputArray(array, inputX, inputY, valuePlayer));
 
         if (winCheck(array, valuePlayer)) {
             std::cout << "You win!\n";
@@ -63,7 +68,7 @@ int main() {
 
                 inputX1 = dist(gen);
                 inputY2 = dist(gen);
-            } while (!checkInputArray(array, inputX1, inputY2));
+            } while (!checkInputArray(array, inputX1, inputY2, valueRobot));
 
             // Updating table and printing it again
             std::cout << "Robot makes move: " << "My move is (" << inputX1 << ", " << inputY2 << "):" << std::endl;
@@ -81,6 +86,11 @@ int main() {
             std::cout<< "Invalid input! Try again! \n";
             std::cin.clear();
             std::cin.ignore(1000, '\n');
+        }
+
+        if (isFull(array)) {
+            std::cout << "Table is full" << std::endl;
+            break;
         }
 
         // For exit the game
