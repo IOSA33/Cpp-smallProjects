@@ -2,6 +2,7 @@
 #include <iostream>
 #include <bits/ostream.tcc>
 #include <random>
+#include <vector>
 
 constexpr int rowsGame{3};
 constexpr int valuePlayer{1};
@@ -23,6 +24,9 @@ int main() {
     int array[3][3] = {{0,0,0}, {0,0,0}, {0,0,0}};
     printTable(array, rowsGame);
 
+    // Array for winner check, only for one game, then empty again
+    std::vector<std::vector<int>> winner;
+
     while (true) {
         // User inputs
         int inputX{};
@@ -32,6 +36,8 @@ int main() {
             std::cout << "Enter a number for X and Y, example (0 2):" << "\n";
             std::cin >> inputX >> inputY;
         } while (!checkInputArray(array, inputX, inputY));
+
+        winCheck(array, winner, inputX, inputY);
 
         // Game starts
         if (inputX >= outOfArrayX && inputY >= outOfArrayY && inputX < outOfArrayX1 && inputY < outOfArrayY1) {
@@ -55,6 +61,8 @@ int main() {
                 inputY2 = dist(gen);
             } while (!checkInputArray(array, inputX1, inputY2));
 
+            winCheck(array, winner, inputX1, inputY2);
+
             // Updating table and printing it again
             std::cout << "Robot makes move: " << "My move is (" << inputX1 << ", " << inputY2 << "):" << std::endl;
 
@@ -67,6 +75,10 @@ int main() {
 
             // TODO: Check for infinity loop
 
+            // Printing what is the winner vector state is
+            for(int i = 0; i < winner.size(); i++) {
+                std::cout << winner[i][0] << ", " << winner[i][1] << "\n";
+            }
         } else {
             std::cout<< "Invalid input! Try again! \n";
             std::cin.clear();

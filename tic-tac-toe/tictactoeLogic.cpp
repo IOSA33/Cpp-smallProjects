@@ -1,6 +1,7 @@
 #include "tictactoe.h"
 #include <iostream>
 #include <bits/ostream.tcc>
+#include <vector>
 
 // Printing current state of the game (array) for console
 void printTable(int arr[][3], const int rows) {
@@ -29,7 +30,10 @@ bool checkInputArray(int arr[][3], const int inputX, const int inputY) {
 }
 
 // Check is anyone won or not
-bool winCheck(int arr[][3]) {
+bool winCheck(int arr[][3], std::vector<std::vector<int>>& arrV, int inputX, int inputY) {
+    arrV.push_back({inputX, inputY});
+    static int moveCounter{};
+
     return true;
 }
 
