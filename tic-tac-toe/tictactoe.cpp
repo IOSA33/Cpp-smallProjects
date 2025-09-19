@@ -56,6 +56,11 @@ int main() {
                 break;
             }
 
+            if (const int winner{winCheck(array, valuePlayer)}) {
+                std::cout << "And winner is: NUMBER" << " " << winner << std::endl;
+                break;
+            }
+
             // For robot inputs
             int inputX1{};
             int inputY2{};
