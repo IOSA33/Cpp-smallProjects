@@ -25,6 +25,7 @@ int main() {
     printTable(array, rowsGame);
 
     while (true) {
+        // Checking if table is full
         if (isFull(array)) {
             std::cout << "Table is full" << std::endl;
             break;
@@ -34,18 +35,18 @@ int main() {
         int inputX{};
         int inputY{};
 
-        if (winCheck(array, valuePlayer)) {
-            std::cout << "You win!\n";
+        if (const int winner{winCheck(array, valuePlayer)}) {
+            std::cout << "And winner is: NUMBER" << winner << std::endl;
             break;
         }
 
         do {
             std::cout << "Enter a number for X and Y, example (0 2):" << "\n";
             std::cin >> inputX >> inputY;
-        } while (!checkInputArray(array, inputX, inputY, valuePlayer));
+        } while (!checkInputArray(array, inputX, inputY));
 
-        if (winCheck(array, valuePlayer)) {
-            std::cout << "You win!\n";
+        if (const int winner{winCheck(array, valuePlayer)}) {
+            std::cout << "And winner is: NUMBER" << " " << winner << std::endl;
             break;
         }
 
@@ -69,7 +70,7 @@ int main() {
 
                 inputX1 = dist(gen);
                 inputY2 = dist(gen);
-            } while (!checkInputArray(array, inputX1, inputY2, valueRobot));
+            } while (!checkInputArray(array, inputX1, inputY2));
 
             // Updating table and printing it again
             std::cout << "Robot makes move: " << "My move is (" << inputX1 << ", " << inputY2 << "):" << std::endl;
@@ -77,8 +78,8 @@ int main() {
             updateTable(array, inputX1, inputY2, valueRobot);
             printTable(array, rowsGame);
 
-            if (winCheck(array, valueRobot)) {
-                std::cout << "You win!\n";
+            if (const int winner{winCheck(array, valueRobot)}) {
+                std::cout << "And winner is: NUMBER" << " " << winner << std::endl;
                 break;
             }
 
@@ -89,6 +90,7 @@ int main() {
             std::cin.ignore(1000, '\n');
         }
 
+        // Checking if table is full
         if (isFull(array)) {
             std::cout << "Table is full" << std::endl;
             break;

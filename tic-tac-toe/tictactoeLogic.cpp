@@ -21,15 +21,15 @@ int updateTable(int arr[][3], const int inputX, const int inputY, int value) {
 }
 
 // Checking is robots move is on top
-bool checkInputArray(int arr[][3], const int inputX, const int inputY, const int currentPlayer) {
-    if (arr[inputX][inputY] == currentPlayer) {
+bool checkInputArray(int arr[][3], const int inputX, const int inputY) {
+    if (arr[inputX][inputY] != 0) {
         return false;
     }
     return true;
 }
 
 // Check is anyone won or not
-bool winCheck(int arr[][3], const int currentPlayer) {
+int winCheck(int arr[][3], const int currentPlayer) {
     // Check win for rows
     for (int row = 0; row < 3; ++row) {
         int sumCounter{0};
@@ -39,7 +39,7 @@ bool winCheck(int arr[][3], const int currentPlayer) {
              }
         }
         if (sumCounter == 3) {
-            return true;
+            return currentPlayer;
         }
     }
 
@@ -52,29 +52,29 @@ bool winCheck(int arr[][3], const int currentPlayer) {
             }
         }
         if (sumCounter == 3) {
-            return true;
+            return currentPlayer;
         }
     }
 
     // Check win for diagonals
     if (arr[0][0] == currentPlayer && arr[1][1] == currentPlayer && arr[2][2] == currentPlayer) {
-        return true;
+        return currentPlayer;
     }
     if (arr[0][2] == currentPlayer && arr[1][1] == currentPlayer && arr[2][0] == currentPlayer) {
-        return true;
+        return currentPlayer;
     }
 
-    return false;
+    return 0;
 }
 
 // Infinite loop check for Robot and Player
 bool isFull(int arr[][3]) {
     for (int row = 0; row < 3; ++row) {
         for (int column = 0; column < 3; ++column) {
-            if (arr[row][column] != 0) {
-                return true;
+            if (arr[row][column] == 0) {
+                return false;
             }
         }
     }
-    return false;
+    return true;
 }
