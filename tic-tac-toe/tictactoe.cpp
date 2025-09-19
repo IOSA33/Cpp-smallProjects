@@ -25,18 +25,12 @@ int main() {
     printTable(array, rowsGame);
 
     while (true) {
-        // Checking if table is full
-        if (isFull(array)) {
-            std::cout << "Table is full" << std::endl;
-            break;
-        }
-
         // User inputs
         int inputX{};
         int inputY{};
 
         if (const int winner{winCheck(array, valuePlayer)}) {
-            std::cout << "And winner is: NUMBER" << winner << std::endl;
+            std::cout << "And winner is: NUMBER" << " " << winner << std::endl;
             break;
         }
 
@@ -55,6 +49,12 @@ int main() {
             // Users move, and print table after input
             updateTable(array, inputX, inputY , valuePlayer);
             printTable(array, rowsGame);
+
+            // Checking if table is full
+            if (isFull(array)) {
+                std::cout << "Table is full" << std::endl;
+                break;
+            }
 
             // For robot inputs
             int inputX1{};
@@ -82,18 +82,10 @@ int main() {
                 std::cout << "And winner is: NUMBER" << " " << winner << std::endl;
                 break;
             }
-
-            // TODO: Check for infinity loop
         } else {
             std::cout<< "Invalid input! Try again! \n";
             std::cin.clear();
             std::cin.ignore(1000, '\n');
-        }
-
-        // Checking if table is full
-        if (isFull(array)) {
-            std::cout << "Table is full" << std::endl;
-            break;
         }
 
         // For exit the game
