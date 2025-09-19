@@ -30,20 +30,29 @@ bool checkInputArray(int arr[][3], const int inputX, const int inputY) {
 }
 
 // Check is anyone won or not
-bool winCheck(int arr[][3], std::vector<std::vector<int>>& arrV, int inputX, int inputY, int currentPlayer) {
-    arrV.push_back({inputX, inputY, currentPlayer});
-
-    int sumForPlayer{0};
-    int sumForRobot{0};
-
-    for (int row = 0; row < 3; row++) {
-        int rowCounter = 0;
-        for (int i = 0; i < arrV.size(); i++) {
-             if (arrV[i][0] == rowCounter && arrV[i][2] == currentPlayer) {
-                ++rowCounter;
+bool winCheck(int arr[][3], const int currentPlayer) {
+    // Check win for rows
+    for (int row = 0; row < 3; ++row) {
+        int sumCounter{0};
+        for (int i = 0; i < 3; i++) {
+             if (arr[row][i] == currentPlayer) {
+                ++sumCounter;
              }
         }
-        if (rowCounter == 3) {
+        if (sumCounter == 3) {
+            return true;
+        }
+    }
+
+    // Check win for columns
+    for (int column = 0; column < 3; ++column) {
+        int sumCounter{0};
+        for (int i = 0; i < 3; i++) {
+            if (arr[i][column] == currentPlayer) {
+                ++sumCounter;
+            }
+        }
+        if (sumCounter == 3) {
             return true;
         }
     }
