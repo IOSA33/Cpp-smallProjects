@@ -37,7 +37,7 @@ int main() {
             std::cin >> inputX >> inputY;
         } while (!checkInputArray(array, inputX, inputY));
 
-        if (winCheck(array, winner, inputX, inputY)) {
+        if (winCheck(array, winner, inputX, inputY, valuePlayer)) {
             std::cout << "You win!\n";
             break;
         }
