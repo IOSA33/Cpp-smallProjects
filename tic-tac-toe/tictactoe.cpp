@@ -37,7 +37,10 @@ int main() {
             std::cin >> inputX >> inputY;
         } while (!checkInputArray(array, inputX, inputY));
 
-        winCheck(array, winner, inputX, inputY);
+        if (winCheck(array, winner, inputX, inputY)) {
+            std::cout << "You win!\n";
+            break;
+        }
 
         // Game starts
         if (inputX >= outOfArrayX && inputY >= outOfArrayY && inputX < outOfArrayX1 && inputY < outOfArrayY1) {

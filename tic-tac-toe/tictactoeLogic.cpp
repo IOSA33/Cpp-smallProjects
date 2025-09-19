@@ -33,23 +33,25 @@ bool checkInputArray(int arr[][3], const int inputX, const int inputY) {
 bool winCheck(int arr[][3], std::vector<std::vector<int>>& arrV, int inputX, int inputY) {
     arrV.push_back({inputX, inputY});
 
-    static int moveCounter{};
+    static int moveCounter{1};
     int winnerCounter{0};
 
-    if (moveCounter==3) {
+    if (moveCounter >= 1) {
         int rowCounter{0};
         while (rowCounter < 3) {
             for (int i = 0; i < arrV.size(); i++) {
-                for (int j = 0; j < arrV[i].size(); j++) {
-                    if (arrV[i][0] == rowCounter) {
-                        ++winnerCounter;
-                    }
+                if (arrV[i][0] == rowCounter) {
+                    ++winnerCounter;
                 }
             }
             ++rowCounter;
         }
     }
-    if (winnerCounter == 2) {
+
+    std::cout << "Winner counter:" <<winnerCounter << "\n";
+    std::cout << "Move counter:" << moveCounter << std::endl;
+
+    if (winnerCounter == 3) {
         return true;
     }
 
