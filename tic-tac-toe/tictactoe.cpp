@@ -90,6 +90,7 @@ int main() {
 
         // For exit the game
         if (inputX == exitGameX || inputY == exitGameY) {
+            std::cout << "Thanks for playing!" << std::endl;
             break;
         }
     }
