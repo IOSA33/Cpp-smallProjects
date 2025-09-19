@@ -61,14 +61,14 @@ int main() {
                 inputY2 = dist(gen);
             } while (!checkInputArray(array, inputX1, inputY2));
 
-            winCheck(array, winner, inputX1, inputY2);
+            // winCheck(array, winner, inputX1, inputY2);
 
             // Updating table and printing it again
             std::cout << "Robot makes move: " << "My move is (" << inputX1 << ", " << inputY2 << "):" << std::endl;
 
             // TODO: Check for winning
 
-            updateTable(array, inputX1, inputY2, valueRobot);
+            // updateTable(array, inputX1, inputY2, valueRobot);
             printTable(array, rowsGame);
 
             // TODO: Check for winning
@@ -77,6 +77,7 @@ int main() {
 
             // Printing what is the winner vector state is
             for(int i = 0; i < winner.size(); i++) {
+                std::cout << i << ": Element in vector" << "\n";
                 std::cout << winner[i][0] << ", " << winner[i][1] << "\n";
             }
         } else {

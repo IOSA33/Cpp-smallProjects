@@ -32,12 +32,37 @@ bool checkInputArray(int arr[][3], const int inputX, const int inputY) {
 // Check is anyone won or not
 bool winCheck(int arr[][3], std::vector<std::vector<int>>& arrV, int inputX, int inputY) {
     arrV.push_back({inputX, inputY});
-    static int moveCounter{};
 
-    return true;
+    static int moveCounter{};
+    int winnerCounter{0};
+
+    if (moveCounter==3) {
+        int rowCounter{0};
+        while (rowCounter < 3) {
+            for (int i = 0; i < arrV.size(); i++) {
+                for (int j = 0; j < arrV[i].size(); j++) {
+                    if (arrV[i][0] == rowCounter) {
+                        ++winnerCounter;
+                    }
+                }
+            }
+            ++rowCounter;
+        }
+    }
+    if (winnerCounter == 2) {
+        return true;
+    }
+
+    ++moveCounter;
+
+    return false;
 }
 
 // Infinite loop check for Robot and Player
 bool infiniteCheck(int arr[][3]) {
     return false;
+}
+
+int nullifyVector(std::vector<std::vector<int>>& arrV) {
+    return 0;
 }
