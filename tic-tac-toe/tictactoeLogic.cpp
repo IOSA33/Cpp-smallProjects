@@ -22,6 +22,10 @@ int updateTable(int arr[][3], const int inputX, const int inputY, int value) {
 
 // Checking is robots move is on top
 bool checkInputArray(int arr[][3], const int inputX, const int inputY) {
+    if (inputX < 0 || inputY < 0 || inputX >= 3 || inputY >= 3) {
+        std::cout << "Invalid input! Try again:" << std::endl;
+        return false;
+    }
     if (arr[inputX][inputY] != 0) {
         return false;
     }
