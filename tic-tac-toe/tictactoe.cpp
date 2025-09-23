@@ -2,7 +2,6 @@
 #include <iostream>
 #include <bits/ostream.tcc>
 #include <random>
-#include <cctype>
 
 constexpr int rowsGame{3};
 constexpr int valuePlayer{1};
@@ -27,10 +26,16 @@ int main() {
 
     while (true) {
         std::cout << "Enter a number for X and Y, example (0 2):" << "\n";
+
         int inputX{0};
         int inputY{0};
-        // User inputs
-        std::cin >> inputX >> inputY;
+
+        // User inputs and check is input is not integer
+        if (!(std::cin >> inputX >> inputY)) {
+            std::cout << "This isn't an integer!\n";
+            std::cout << "Exit!" << std::endl;
+            break;
+        }
 
         if (inputX == exitGameX && inputY == exitGameY) {
             std::cout << "Thanks for playing!" << std::endl;
@@ -38,7 +43,11 @@ int main() {
         }
 
         while (!checkInputArray(array, inputX, inputY)) {
-            std::cin >> inputX >> inputY;
+            if (!(std::cin >> inputX >> inputY)) {
+                std::cout << "This isn't an integer!\n";
+                std::cout << "Exit!" << std::endl;
+                return EXIT_SUCCESS;
+            }
 
             // For exit the game
             if (inputX == exitGameX && inputY == exitGameY) {
