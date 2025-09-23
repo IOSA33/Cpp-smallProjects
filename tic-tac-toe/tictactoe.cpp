@@ -19,7 +19,7 @@ constexpr int exitGameY{10};
 // Command for compile: "g++ tictactoe.cpp tictactoeLogic.cpp -o tictactoe.exe"
 // Command for run (Needs to be in a folder): "./tictactoe.exe"
 int main() {
-    std::cout << "Hello it is a mini game tic-tac-toe:"<< "\n";
+    std::cout << "Hello it is a mini game tic-tac-toe (For exit print (10 10)):"<< "\n";
 
     // Array of our map game
     int array[3][3] = {{0,0,0}, {0,0,0}, {0,0,0}};
@@ -32,20 +32,23 @@ int main() {
         // User inputs
         std::cin >> inputX >> inputY;
 
-        // For exit the game
-        if (inputX == exitGameX || inputY == exitGameY) {
+        if (inputX == exitGameX && inputY == exitGameY) {
             std::cout << "Thanks for playing!" << std::endl;
-            return EXIT_SUCCESS;
+            break;
         }
 
         while (!checkInputArray(array, inputX, inputY)) {
             std::cin >> inputX >> inputY;
 
             // For exit the game
-            if (inputX == exitGameX || inputY == exitGameY) {
-                std::cout << "Thanks for playing!" << std::endl;
-                return EXIT_SUCCESS;
+            if (inputX == exitGameX && inputY == exitGameY) {
+                break;
             }
+        }
+
+        if (inputX == exitGameX && inputY == exitGameY) {
+            std::cout << "Thanks for playing!" << std::endl;
+            break;
         }
 
         if (const int winner{winCheck(array, valuePlayer)}) {
