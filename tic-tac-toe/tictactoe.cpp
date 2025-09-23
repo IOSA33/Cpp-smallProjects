@@ -51,25 +51,21 @@ int main() {
             break;
         }
 
-        if (const int winner{winCheck(array, valuePlayer)}) {
-            std::cout << "And winner is: NUMBER" << " " << winner << std::endl;
-            break;
-        }
-
         // Game starts
         if (inputX >= outOfArrayX && inputY >= outOfArrayY && inputX < outOfArrayX1 && inputY < outOfArrayY1) {
             // Users move, and print table after input
             updateTable(array, inputX, inputY , valuePlayer);
             printTable(array, rowsGame);
 
-            // Checking if table is full
-            if (isFull(array)) {
-                std::cout << "Table is full" << std::endl;
+            // Checking the winner after user move
+            if (const int winner{winCheck(array, valuePlayer)}) {
+                std::cout << "And winner is: NUMBER" << " " << winner << std::endl;
                 break;
             }
 
-            if (const int winner{winCheck(array, valuePlayer)}) {
-                std::cout << "And winner is: NUMBER" << " " << winner << std::endl;
+            // Checking if table is full
+            if (isFull(array)) {
+                std::cout << "Table is full" << std::endl;
                 break;
             }
 
