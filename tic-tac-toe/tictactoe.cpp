@@ -15,7 +15,7 @@ constexpr int outOfArrayY1{3};
 constexpr int exitGameX{10};
 constexpr int exitGameY{10};
 
-// Command for compile: "g++ tictactoe.cpp tictactoeLogic.cpp -o tictactoe.exe"
+// Command for compile (MSYS2): "g++ tictactoe.cpp tictactoeLogic.cpp -o tictactoe.exe"
 // Command for run (Needs to be in a folder): "./tictactoe.exe"
 int main() {
     std::cout << "Hello it is a mini game tic-tac-toe (For exit print (10 10)):"<< "\n";
