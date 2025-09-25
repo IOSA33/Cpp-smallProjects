@@ -1,4 +1,6 @@
 #include <iostream>
+#include <cassert> // for assert
+#include <cstdlib> // for std::abort
 
 bool isLowerVowel(char c)
 {
@@ -18,7 +20,7 @@ bool isLowerVowel(char c)
 // So basically here if we want to retest things later
 // This requires you to remember what the expected answer was at worst (assuming you didn’t document it),
 // and manually compare the actual results to the expected results. This is not what we wanted.
-void testisLowerVowel() {
+void testVowel() {
     std::cout << isLowerVowel('a') << '\n'; // temporary test code, should produce 1
     std::cout << isLowerVowel('q') << '\n'; // temporary test code, should produce 0
 }
@@ -26,8 +28,9 @@ void testisLowerVowel() {
 // We can do better by writing a test function that contains both the tests
 // AND the expected answers and compares them so we don’t have to.
 // returns the number of the test that failed, or 0 if all tests passed
-int testVowel()
+int testVowel1()
 {
+    // Returns number of the test that didn't pass.
     if (!isLowerVowel('o')) return 1;
     if (isLowerVowel('q')) return 2;
     if (!isLowerVowel('e')) return 3;
@@ -36,17 +39,48 @@ int testVowel()
     return 0;
 }
 
+// Program will halt on any failed test case
+int testVowel2() {
+#ifdef NDEBUG
+    // If NDEBUG is defined, asserts are compiled out.
+    // Since this function requires asserts to not be compiled out, we'll terminate the program if this function is called when NDEBUG is defined.
+    std::cerr << "Tests run with NDEBUG defined (asserts compiled out)";
+    std::abort();
+#endif
+
+    assert(isLowerVowel('a'));
+    assert(isLowerVowel('e'));
+    assert(isLowerVowel('i'));
+    assert(isLowerVowel('o'));
+    assert(isLowerVowel('u'));
+    assert(!isLowerVowel('b'));
+    assert(!isLowerVowel('q'));
+    assert(!isLowerVowel('y'));
+    assert(!isLowerVowel('z'));
+
+    return 0;
+}
+
+
 
 int main() {
     // Returning 1, because it is true
     std::cout << isLowerVowel('a') << "\n";
-    testisLowerVowel();
 
-    int result { testVowel() };
+    // First test
+    testVowel();
+
+    // Test for better tests
+    int result { testVowel1() };
     if (result != 0)
         std::cout << "testVowel() test " << result << " failed.\n";
     else
         std::cout << "testVowel() tests passed.\n";
+
+    // Advanced test handler
+    testVowel2();
+    // If we reached here, all tests must have passed
+    std::cout << "All tests succeeded\n";
 
     return 0;
 }
