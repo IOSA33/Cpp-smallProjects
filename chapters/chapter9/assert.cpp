@@ -2,6 +2,9 @@
 #include <cmath> // for std::sqrt
 #include <iostream>
 
+// Best practice: Because static_assert  is evaluated by the compiler
+// Favor static_assert over assert() whenever possible.
+
 /*
  *Asserts are better than comments because they have both document
  *and enforce a condition. Comments can become stale when the code
