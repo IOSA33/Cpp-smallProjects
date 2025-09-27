@@ -18,11 +18,25 @@ double getDouble()
         double x{};
         std::cin >> x;
 
+        // This is also works, but it is better to not ignore the invalid input
+        /*
         if (hasUnextractedInput()) {
             ignoreLine();
             continue;
         }
+        */
 
+        // Now we check if cin is failure ofr example input for example 'a', because cin cant convert the
+        // A to a decimal that's why cin enters the infinite loop in the buffer for trying everytime the convert the 'a'
+        // We are telling "if the cin is failure enter the if statement". This will work also "if (std::cin.fail())"
+        if (!std::cin) {
+            // "clear the error state" of cin
+            std::cin.clear(); // Put us back in 'normal' operation mode
+            ignoreLine();     // And remove the bad input
+            continue;
+        }
+
+        ignoreLine();
         return x;
     }
 }
