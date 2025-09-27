@@ -2,18 +2,20 @@
 #include <cassert> // for assert
 #include <cstdlib> // for std::abort
 
+// This function will require two calls to test all the statements, as there is no way to reach
+// statement 2 and 3 in the same function call.
 bool isLowerVowel(char c)
 {
-    switch (c)
+    switch (c) // Statement 1
     {
         case 'a':
         case 'e':
         case 'i':
         case 'o':
         case 'u':
-            return true;
+            return true; // Statement 2
         default:
-            return false;
+            return false; // Statement 3
     }
 }
 
@@ -54,14 +56,12 @@ int testVowel2() {
     assert(isLowerVowel('o'));
     assert(isLowerVowel('u'));
     assert(!isLowerVowel('b'));
-    assert(!isLowerVowel('q'));
+    assert(isLowerVowel('q'));
     assert(!isLowerVowel('y'));
     assert(!isLowerVowel('z'));
 
     return 0;
 }
-
-
 
 int main() {
     // Returning 1, because it is true
