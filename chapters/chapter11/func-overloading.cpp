@@ -12,6 +12,10 @@ double add(double x, double y) {
     return x + y;
 }
 
+int add(int x, int y, int z) {
+    return x + y + z;
+}
+
 int main() {
     add(1, 2);
     std::cout<< add(3.53, 4.353);
