@@ -38,5 +38,11 @@ public:
 };
 
 int main() {
+    Dog dog("Dog");
+    Cat cat("Cat");
 
+    dog.sleep();
+    dog.makeSound();
+    cat.sleep();
+    cat.makeSound();
 }
