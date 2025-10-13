@@ -1,3 +1,4 @@
+#include <queue>
 template<typename T>;
 class Node {
 public:
@@ -29,7 +30,41 @@ private:
         if (current->data == value) return true;
         return serchRecursive(current->left, value) || serchRecursive(current->right, value);
     }
+public:
+    // Constructor to initialize the tree
+    BinaryTree() : root(nullptr) {}
 
+    // Function to insert a nod ein the binary tree
+    void insertNode(T value) {
+        Node<T>* newNode = new Node<T>(value);
+
+        if (root == nullptr) {
+            root = newNode;
+            return;
+        }
+
+        queue<Node<T>*> q;
+        q.push(root);
+
+        while (!q.empty()) {
+            Node<T>* current = q.front();
+            q.pop();
+
+            if (current->left ==nullptr) {
+                current->left = newNode;
+                return;
+            } else {
+                q.push(current->left);
+            }
+
+            if (current->right ==nullptr) {
+                current->right = newNode;
+                return;
+            } else {
+                q.push(current->right);
+            }
+        }
+    }
 };
 
 int main() {
