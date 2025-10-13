@@ -36,42 +36,13 @@ private:
     }
 
 
-    int bigestSearch(Node<T>* current) {
-        int temp{0};
+    int calculateMaxPaht(Node<T>* currentNode) {
+        if (currentNode == nullptr) return 0;
 
-        queue<Node<T>*> q;
-        q.push(root);
+        int maxLeft = calculateMaxPaht(currentNode->left);
+        int maxRight = calculateMaxPaht(currentNode->right);
 
-        if (!(current->left == nullptr)) {
-            q.push(current);
-            bigestSearch(current->left);
-        } else {
-            if (current->left->data >= current->right->data) {
-                temp += current->left->data;
-                q.pop(current->left);
-                current->data = q.front()->data;
-            } else {
-                temp += current->right->data;
-            }
-        }
-
-        if (!(current->right == nullptr)) {
-            q.push(current);
-            bigestSearch(current->right);
-        } else {
-            if (current->left->data > current->right->data) {
-                temp += current->left->data;
-            } else {
-                temp += current->right->data;
-            }
-        }
-    }
-
-
-    // Recursive Function to search the biggest sum of the one path of the tree
-    int searchSumRecursive(Node<T>* current) {
-        int temp{0};
-        if (current == nullptr) return 0;
+        return currentNode->data + std::max(maxLeft, maxRight);
     }
 
 public:
