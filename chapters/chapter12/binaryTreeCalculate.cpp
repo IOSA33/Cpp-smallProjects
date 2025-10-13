@@ -36,12 +36,28 @@ private:
     }
 
 
-    int calculateMaxPaht(Node<T>* currentNode) {
+    // Binary tree algrithm 1
+    int calculateMaxPahtFromRoot(Node<T>* currentNode) {
         if (currentNode == nullptr) return 0;
 
         int maxLeft = calculateMaxPaht(currentNode->left);
         int maxRight = calculateMaxPaht(currentNode->right);
 
+        return currentNode->data + std::max(maxLeft, maxRight);
+    }
+
+    // Binary tree algorith 2
+    int answer{0};
+    int maxPathSum(Node<T>* currentNode) {
+        calculateMaxPathFromAnyNode(currentNode);
+        return answer;
+    }
+    int calculateMaxPathFromAnyNode(Node<T>* currentNode) {
+        if (currentNode == nullptr) return 0;
+
+        int maxLeft = std::max(calculateMaxPathFromAnyNode(currentNode->left), 0);
+        int maxRight = std::max(calculateMaxPathFromAnyNode(currentNode->left), 0);
+        answer = std::max(answer, maxLeft, maxRight+ currentNode.val);
         return currentNode->data + std::max(maxLeft, maxRight);
     }
 
