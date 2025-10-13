@@ -1,5 +1,9 @@
+#include <iostream>
 #include <queue>
-template<typename T>;
+using namespace std;
+
+
+template <typename T>
 class Node {
 public:
     T data; // Data represents the value stored in the node of the tree
@@ -10,7 +14,7 @@ public:
     Node(T value) : data(value), left(nullptr), right(nullptr) {}
 };
 
-template<typename T>
+template <typename T>
 class BinaryTree {
 private:
     // Pointer to the root of the tree
@@ -25,11 +29,51 @@ private:
     }
 
     // Recursive Function to search for a value in the tree
-    bool serchRecursive(Node<T>* current, T value) {
+    bool searchRecursive(Node<T>* current, T value) {
         if (current == nullptr) return false;
         if (current->data == value) return true;
-        return serchRecursive(current->left, value) || serchRecursive(current->right, value);
+        return searchRecursive(current->left, value) || searchRecursive(current->right, value);
     }
+
+
+    int bigestSearch(Node<T>* current) {
+        int temp{0};
+
+        queue<Node<T>*> q;
+        q.push(root);
+
+        if (!(current->left == nullptr)) {
+            q.push(current);
+            bigestSearch(current->left);
+        } else {
+            if (current->left->data >= current->right->data) {
+                temp += current->left->data;
+                q.pop(current->left);
+                current->data = q.front()->data;
+            } else {
+                temp += current->right->data;
+            }
+        }
+
+        if (!(current->right == nullptr)) {
+            q.push(current);
+            bigestSearch(current->right);
+        } else {
+            if (current->left->data > current->right->data) {
+                temp += current->left->data;
+            } else {
+                temp += current->right->data;
+            }
+        }
+    }
+
+
+    // Recursive Function to search the biggest sum of the one path of the tree
+    int searchSumRecursive(Node<T>* current) {
+        int temp{0};
+        if (current == nullptr) return 0;
+    }
+
 public:
     // Constructor to initialize the tree
     BinaryTree() : root(nullptr) {}
@@ -65,8 +109,27 @@ public:
             }
         }
     }
+
+    bool search(T value) {
+        return searchRecursive(root, value);
+    }
 };
 
 int main() {
+    BinaryTree<int> tree;
+
+    tree.insertNode(1);
+    tree.insertNode(4);
+    tree.insertNode(7);
+    tree.insertNode(2);
+    tree.insertNode(3);
+    tree.insertNode(5);
+    tree.insertNode(4);
+    tree.insertNode(2);
+
+    cout << "Searching for 7: " << (tree.search(7) ? "Found" : "Not Found") << endl;
+
+
+
     return 0;
 }
