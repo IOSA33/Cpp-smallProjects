@@ -18,8 +18,7 @@ public:
         for (auto x : s1) {
             if (s1.find(x-1) == s1.end()){
                 int counting{1};
-                int temp{0};
-                ++temp;
+                int temp{1};
                 while (s1.count(x+counting)){
                     ++temp;
                     ++counting;
@@ -27,7 +26,6 @@ public:
                 if (result < temp) {
                     result = temp;
                 }
-                temp = 0;
             }
         }
 
