@@ -4,18 +4,18 @@
 
 class Solution {
 public:
-    int longestConsecutive(std::vector<int>& nums) {
+    static int longestConsecutive(const std::vector<int>& nums) {
         if (nums.empty()) return 0;
 
         std::set<int> s1;
 
-        for (int i = 0; i<nums.size(); i++) {
-            s1.insert(nums[i]);
+        for (int x : nums) {
+            s1.insert(x);
         }
 
         int result{0};
 
-        for (auto x : s1) {
+        for (const int x : s1) {
             if (s1.find(x-1) == s1.end()){
                 int counting{1};
                 int temp{1};
@@ -34,10 +34,9 @@ public:
 };
 
 int main() {
-    std::vector<int> cars = {100,4,200,1,3,2};
-    Solution newClass;
+    const std::vector cars = {100,4,200,1,3,2,202,101,102};
 
-    int result = newClass.longestConsecutive(cars);
+    const int result = Solution::longestConsecutive(cars);
 
     std::cout << result << std::endl;
 }
