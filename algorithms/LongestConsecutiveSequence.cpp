@@ -5,6 +5,8 @@
 class Solution {
 public:
     int longestConsecutive(std::vector<int>& nums) {
+        if (nums.empty()) return 0;
+
         std::set<int> s1;
 
         for (int i = 0; i<nums.size(); i++) {
@@ -14,16 +16,18 @@ public:
         int result{0};
 
         for (auto x : s1) {
-            int counting{1};
-            int temp{0};
-            if (s1.count(x-1)){
-                if (s1.count(x+counting)){
+            if (s1.find(x-1) == s1.end()){
+                int counting{1};
+                int temp{0};
+                ++temp;
+                while (s1.count(x+counting)){
                     ++temp;
-                    counting;
-                } else {
-                    result = temp;
-                    temp = 0;
+                    ++counting;
                 }
+                if (result < temp) {
+                    result = temp;
+                }
+                temp = 0;
             }
         }
 
