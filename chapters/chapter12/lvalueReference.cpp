@@ -1,14 +1,22 @@
 #include <iostream>
 
-int main() {
-    int x{5};
-    int& ref {x};
-    int ref1 {x};
+int main()
+{
+    int x{ 1 };
+    int& ref{ x };
+    const int& ref1{ ref };
 
-    // Invalid: non const lvalue reference cant bind to an r value
-    // int& invalidRed {0};
+    std::cout << x << ref << ref1 << '\n';
 
-    ref = 10;
+    int y{ 2 };
+    ref = y;
+    y = 3;
 
-    std::cout << x << ":" << ref << ":" << ref1 << std::endl;
+    std::cout << x << ref << '\n';
+
+    x = 4;
+
+    std::cout << x << ref << '\n';
+
+    return 0;
 }
