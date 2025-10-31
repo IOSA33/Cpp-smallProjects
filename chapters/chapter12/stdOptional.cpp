@@ -9,6 +9,13 @@ std::optional<int> doIntDivision(int x, int y) {
     return x/y;
 }
 
+void printIDNumber(const std::optional<const int> id = std::nullopt) {
+    if (id)
+        std::cout << "Your ID number is " << id.value() << ".\n";
+    else
+        std::cout << "Your ID number is not known.\n";
+}
+
 int main () {
     std::optional<int> result1 {doIntDivision(20, 5)};
 
@@ -24,6 +31,10 @@ int main () {
         std::cout << "Result 2: " << *result2 << '\n';
     else
         std::cout << "Result 2: failed\n";
+
+    const int id { 34 };
+    printIDNumber();
+    printIDNumber(id);
 
     return 0;
 }
