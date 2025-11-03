@@ -40,7 +40,7 @@ int calculateDifference(int array[]) {
     return result;
 }
 
-int howManyInt(std::set<int>& s1, int a, int b) {
+int howManyInt(std::multiset<int>& s1, int a, int b) {
     int result{};
 
     while (a < b) {
@@ -63,13 +63,12 @@ int main() {
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dist(0,100);
 
-    std::set<int> s1;
-    for (int i = 0; i < 101; ++i) {
-        s1.insert(dist(gen));
+    std::multiset<int> ms1;
+    for (int i = 0; i < 100; ++i) {
+        ms1.insert(dist(gen));
     }
 
-    std::cout << "[0, 10]: " << howManyInt(s1, 0, 10) << '\n';
-
+    std::cout << "[0, 10]: " << howManyInt(ms1, 0, 10) << '\n';
 
     return EXIT_SUCCESS;
 }
