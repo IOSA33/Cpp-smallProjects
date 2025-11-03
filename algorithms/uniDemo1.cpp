@@ -49,7 +49,7 @@ int howManyInt(const std::multiset<int>& ms1, int a, const int b) {
     }
 
     while (a <= b) {
-        if (const size_t count = ms1.count(a); count > 0) {
+        if (const size_t count = ms1.count(a)) {
             std::cout << "Element found: " << a << ". " << count << " times" << std::endl;
             result += static_cast<int>(count);
         }
