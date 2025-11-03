@@ -40,14 +40,18 @@ int calculateDifference(int array[]) {
     return result;
 }
 
-int howManyInt(std::multiset<int>& s1, int a, int b) {
+int howManyInt(const std::multiset<int>& ms1, int a, const int b) {
     int result{};
 
-    while (a < b) {
-        auto it = s1.find(a);
-        if (it != s1.end()) {
-            std::cout << "Element found: " << *it << std::endl;
-            ++result;
+    if (a > b) {
+        std::cout << "a:" << a << " is greater than b:" << b << std::endl;
+        return 0;
+    }
+
+    while (a <= b) {
+        if (const size_t count = ms1.count(a); count > 0) {
+            std::cout << "Element found: " << a << ". " << count << " times" << std::endl;
+            result += static_cast<int>(count);
         }
         ++a;
     }
@@ -69,6 +73,9 @@ int main() {
     }
 
     std::cout << "[0, 10]: " << howManyInt(ms1, 0, 10) << '\n';
+    std::cout << "[50, 100]: " << howManyInt(ms1, 50, 100) << '\n';
+    std::cout << "[67, 75]: " << howManyInt(ms1, 67, 75) << '\n';
+    std::cout << "[98, 75]: " << howManyInt(ms1, 98, 75) << '\n';
 
     return EXIT_SUCCESS;
 }
