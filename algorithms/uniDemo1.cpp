@@ -4,6 +4,7 @@
 #include <set>
 #include <algorithm>
 #include <vector>
+#include <chrono>
 
 int samaaMerkki(const std::string& merkkijono) {
     if (merkkijono.empty()) {
@@ -90,9 +91,22 @@ int main() {
     }
     std::ranges::sort(v1);
 
+    std::chrono::time_point<std::chrono::high_resolution_clock> start, end;
+
+    start = std::chrono::high_resolution_clock::now();
     std::cout << "Set [0, 10]: " << howManyInt(ms1, 0, 10) << '\n';
+    end = std::chrono::high_resolution_clock::now();
+    auto setd = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+    std::cout << "Set time with same seed " << setd.count() << " ms" << std::endl;
+
+    start = std::chrono::high_resolution_clock::now();
     std::cout << "Vector [0, 10]: " << howManyInt(v1, 0, 10) << '\n';
+    end = std::chrono::high_resolution_clock::now();
+    auto vectord = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+    std::cout << "Vector time with same seed " << vectord.count() << " ms" << std::endl;
+
     std::cout << "[50, 100]: " << howManyInt(ms1, 50, 100) << '\n';
+
     std::cout << "[67, 75]: " << howManyInt(ms1, 67, 75) << std::endl;
 
     return EXIT_SUCCESS;
