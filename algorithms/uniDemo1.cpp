@@ -2,6 +2,8 @@
 #include <string>
 #include <random>
 #include <set>
+#include <algorithm>
+#include <vector>
 
 int samaaMerkki(const std::string& merkkijono) {
     if (merkkijono.empty()) {
@@ -40,7 +42,7 @@ int calculateDifference(int array[]) {
     return result;
 }
 
-int howManyInt(const std::multiset<int>& ms1, int a, const int b) {
+int howManyInt(const std::multiset<int>& ms1, const int a, const int b) {
     int result{};
 
     if (a > b) {
@@ -48,13 +50,24 @@ int howManyInt(const std::multiset<int>& ms1, int a, const int b) {
         return 0;
     }
 
-    while (a <= b) {
-        if (const size_t count = ms1.count(a)) {
-            std::cout << "Element found: " << a << ". " << count << " times" << std::endl;
-            result += static_cast<int>(count);
-        }
-        ++a;
+    const auto it_low = ms1.lower_bound(a);
+    const auto it_high = ms1.upper_bound(b);
+    result = static_cast<int>(std::distance(it_low, it_high));
+
+    return result;
+}
+
+int howManyInt(std::vector<int>& v1, const int a, const int b) {
+    int result{};
+
+    if (a > b) {
+        std::cout << "a:" << a << " is greater than b:" << b << std::endl;
+        return 0;
     }
+
+    const auto it_low = std::ranges::lower_bound(v1.begin(), v1.end(), a);
+    const auto it_high = std::ranges::upper_bound(v1.begin(), v1.end(), b);
+    result = static_cast<int>(std::distance(it_low, it_high));
 
     return result;
 }
@@ -68,14 +81,19 @@ int main() {
     std::uniform_int_distribution<> dist(0,100);
 
     std::multiset<int> ms1;
+    std::vector<int> v1;
+    v1.reserve(100);
     for (int i = 0; i < 100; ++i) {
-        ms1.insert(dist(gen));
+        int insertion = dist(gen);
+        ms1.insert(insertion);
+        v1.emplace_back(insertion);
     }
+    std::ranges::sort(v1);
 
-    std::cout << "[0, 10]: " << howManyInt(ms1, 0, 10) << '\n';
+    std::cout << "Set [0, 10]: " << howManyInt(ms1, 0, 10) << '\n';
+    std::cout << "Vector [0, 10]: " << howManyInt(v1, 0, 10) << '\n';
     std::cout << "[50, 100]: " << howManyInt(ms1, 50, 100) << '\n';
-    std::cout << "[67, 75]: " << howManyInt(ms1, 67, 75) << '\n';
-    std::cout << "[98, 75]: " << howManyInt(ms1, 98, 75) << '\n';
+    std::cout << "[67, 75]: " << howManyInt(ms1, 67, 75) << std::endl;
 
     return EXIT_SUCCESS;
 }
