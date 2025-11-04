@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <vector>
 #include <chrono>
+#include <unordered_set>
 
 int samaaMerkki(const std::string& merkkijono) {
     if (merkkijono.empty()) {
@@ -73,9 +74,35 @@ int howManyInt(std::vector<int>& v1, const int a, const int b) {
     return result;
 }
 
+int noMoreDuplicates(unsigned int (&arr)[10]) {
+    int result{};
+
+    std::pmr::unordered_set<unsigned int> um1;
+
+    constexpr int size = sizeof(arr) / sizeof(int);
+
+    for (unsigned int & i : arr) {
+        if (!um1.contains(i)) {
+            um1.insert(i);
+        } else {
+            i = 0;
+            ++result;
+        }
+    }
+
+    return result;
+}
+
 int main() {
     // int array[10] = {1, 2, 23, 4, 5, 6, 7, 11, 9, 10};
     // std::cout << calculateDifference(array) << std::endl;
+
+    unsigned int array[10] = {1, 2, 2, 4, 5, 6, 7, 7, 9, 10};
+    std::cout << "Zeros of duplicates: " << noMoreDuplicates(array) << std::endl;
+    for (const unsigned int & i : array) {
+        std::cout << i << ", ";
+    }
+    std::cout << std::endl;
 
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -106,7 +133,6 @@ int main() {
     std::cout << "Vector time with same seed " << vectord.count() << " ms" << std::endl;
 
     std::cout << "[50, 100]: " << howManyInt(ms1, 50, 100) << '\n';
-
     std::cout << "[67, 75]: " << howManyInt(ms1, 67, 75) << std::endl;
 
     return EXIT_SUCCESS;
