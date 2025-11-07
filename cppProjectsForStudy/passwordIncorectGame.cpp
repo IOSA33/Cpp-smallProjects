@@ -125,8 +125,12 @@ int main() {
     std::cout << "Try to guess the password, :) \n";
     std::array<int, 4> passFromUser{};
 
-    while (!checkForResutl(randomPass, passFromUser)) {
+    while (true) {
         gettingPassFromUser(passFromUser);
+
+        if (checkForResutl(randomPass, passFromUser)) {
+            break;
+        }
     }
 
     std::cout << "Congrats, you won the Game, :)" << '\n';
