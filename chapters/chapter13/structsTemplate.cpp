@@ -18,6 +18,14 @@ constexpr T max(Pair<T, U> p)
 }
 
 template <typename T, typename U>
+using Coord = Pair<T, U>;
+
+template <typename T, typename U>
+void printReference(const Coord<T, U>& c) {
+  std::cout << c.first << ' ' << c.second << '\n';
+}
+
+template <typename T, typename U>
 void print(std::pair<T, U> p) {
   std::cout << p.first << ' ' << p.second << '\n';
 }
