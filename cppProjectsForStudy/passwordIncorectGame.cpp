@@ -2,6 +2,9 @@
 #include <iostream>
 #include <array>
 #include <limits>
+#include "guessPassword.h"
+
+void getPasswordStruct(GuessPass::Pass& pass);
 
 void getRandomPass(std::array<int, 4>& pass) {
     std::random_device rd;
@@ -113,6 +116,11 @@ bool checkForResutl(const std::array<int, 4>& randomPass, std::array<int, 4>& us
 
 int main() {
     gettingStart();
+
+    // Just an example of struct
+    GuessPass::Pass pass{};
+    getPasswordStruct(pass);
+    std::cout << pass.pass1 << pass.pass2 << pass.pass3 <<pass.pass4 << std::endl;
 
     std::array<int, 4> randomPass{};
     getRandomPass(randomPass);
