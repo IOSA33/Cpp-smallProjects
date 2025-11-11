@@ -118,17 +118,17 @@ int main() {
     gettingStart();
 
     // Just an example of struct
-    GuessPass::Pass pass{};
-    getPasswordStruct(pass);
-    std::cout << pass.pass1 << pass.pass2 << pass.pass3 <<pass.pass4 << std::endl;
+    // GuessPass::Pass pass{};
+    // getPasswordStruct(pass);
+    // std::cout << pass.pass1 << pass.pass2 << pass.pass3 <<pass.pass4 << std::endl;
 
     std::array<int, 4> randomPass{};
     getRandomPass(randomPass);
 
-    for (int i = 0; i < 4; i++) {
-        std::cout << randomPass[i];
-    }
-    std::cout << '\n';
+    // for (int i = 0; i < 4; i++) {
+    //     std::cout << randomPass[i];
+    // }
+    // std::cout << '\n';
 
     std::cout << "Try to guess the password, :) \n";
     std::array<int, 4> passFromUser{};
