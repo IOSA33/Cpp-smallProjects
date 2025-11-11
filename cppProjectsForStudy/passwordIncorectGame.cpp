@@ -117,10 +117,10 @@ int main() {
     std::array<int, 4> randomPass{};
     getRandomPass(randomPass);
 
-    for (int i = 0; i < 4; i++) {
-        std::cout << randomPass[i];
-    }
-    std::cout << '\n';
+    // for (int i = 0; i < 4; i++) {
+    //     std::cout << randomPass[i];
+    // }
+    // std::cout << '\n';
 
     std::cout << "Try to guess the password, :) \n";
     std::array<int, 4> passFromUser{};
