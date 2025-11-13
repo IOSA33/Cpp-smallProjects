@@ -8,6 +8,12 @@ class Subject {
     int m_studentGrade{};
 
 public:
+    Subject(const std::string& subjectName, int studentGrade)
+            : m_subjectName(subjectName), m_studentGrade(studentGrade) {
+        std::cout << "Subject added and name is " << m_subjectName << std::endl;
+    }
+
+
     void addGradesSubject(const std::string& subject, const int grade) {
         if (grade > 5) {
             std::cout << "Grade is greater than 5, we dont need that\n";
@@ -26,20 +32,15 @@ public:
     }
 };
 
-
 class Student {
     int m_id{};
     std::string m_name{};
     std::unordered_map<std::string, int> m_GradesSubjects{};
 
 public:
-    Student(int id, const std::string& name) : m_id(id), m_name(name) {
-
-    }
-
-    void getNewStudent(const int id, const std::string_view studentName) {
-        m_id = id;
-        m_name = studentName;
+    Student(const int id, const std::string& name)
+            : m_id{id}, m_name(name) { // Constructor after ":", can use {} or ().
+        std::cout << "Student(" << id << ", " << name << ") constructed\n";
     }
 
     void addSubjectToStudent(const Subject& sbj) {
@@ -53,10 +54,11 @@ public:
         double studentGPA{};
         int count{};
         for (const auto&[fst, snd]: m_GradesSubjects) {
-            std::cout << fst << " : " << snd <<'\n';
+            std::cout << fst << " : " << snd << ", ";
             ++count;
             studentGPA += snd;
         }
+        std::cout << "GPA = ";
         return studentGPA / count;
     }
 
@@ -70,21 +72,22 @@ public:
 };
 
 std::ostream& operator<<(std::ostream& out, Student& student) {
-    out << student.getId() << ", " << student.getName() << ", " << student.getGPA();
+    out << student.getId() << ", " << student.getName() << "\n(" << student.getGPA() << ")";
     return out;
 }
 
 int main() {
     std::cout << "STUDENTS courses and their gpa \n";
-    std::cout << "Get new STUDENT or add COURSES to STUDENTS\n";
 
     std::vector<Student> vector = {};
 
     Student topias{1, "qweqwe"};
-    topias.getNewStudent(1, "sigmaBoy");
-    Subject topiasSubjects;
-    topiasSubjects.addGradesSubject("math", 4);
-    topias.addSubjectToStudent(topiasSubjects);
+
+    Subject topiasMath{"math", 4};
+    topias.addSubjectToStudent(topiasMath);
+
+    Subject topiasAlgebra{"algebra", 5};
+    topias.addSubjectToStudent(topiasAlgebra);
 
     vector.emplace_back(topias);
 
