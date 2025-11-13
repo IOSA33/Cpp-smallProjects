@@ -5,14 +5,8 @@ class Ball {
     double m_radius{10.0};
 
 public:
-    Ball() = default;
-    Ball(double radius) : m_radius(radius) {
-        print();
-    }
-    Ball(std::string_view color) : m_color(color) {
-        print();
-    }
-    Ball(std::string_view color, double radius) : m_color(color), m_radius(radius) {
+    Ball(double radius) : Ball("black", radius) {}
+    Ball(std::string_view color="black", double radius=10.0) : m_color(color), m_radius(radius) {
         print();
     }
 
