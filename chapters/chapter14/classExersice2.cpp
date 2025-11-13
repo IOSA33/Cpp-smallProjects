@@ -5,8 +5,9 @@ class Ball {
     double m_radius{10.0};
 
 public:
-    Ball(double radius) : Ball("black", radius) {}
-    Ball(std::string_view color="black", double radius=10.0) : m_color(color), m_radius(radius) {
+    explicit Ball(const double radius) : Ball("black", radius) {}
+    explicit Ball(const std::string_view color="black", const double radius=10.0)
+    : m_color(color), m_radius(radius) {
         print();
     }
 
