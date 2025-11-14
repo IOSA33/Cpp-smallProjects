@@ -13,12 +13,18 @@ public:
     void setID(int id) { m_id = id; }
     // Compiler rewrites it as:
     // static void setID(Simple* const this, int id) { this->m_id = id; }
+    // With reference: static void setID(Simple& const this, int id) {this.m_id = id}
 
     void print() const { std::cout << this->m_id; } // use `this` pointer to access the implicit object and operator-> to select member m_id
 
     // Returning *this for doing chainable function
     Simple& add(int value) {m_id += value; return *this;}
     Simple& sub(int value) {m_id -= value; return *this;}
+
+    void reset() {
+    *this = Simple(0);
+        // value initialize a new object and overwrite the implicit object
+    }
 };
 
 struct Something {
@@ -37,6 +43,8 @@ int main() {
 
     // Chaining method
     simple.add(3).sub(4);
+
+    simple.reset();
 
     simple.print();
 
