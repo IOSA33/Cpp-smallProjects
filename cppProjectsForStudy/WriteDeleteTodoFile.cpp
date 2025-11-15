@@ -33,6 +33,14 @@ class TextEditor {
     static inline int m_uniqueID{ 1 };
 
 public:
+    enum Type {
+        notFound,
+        readText,
+        writeText,
+        deleteText,
+        escape,
+    };
+
     explicit TextEditor(const std::string_view fileName) : m_fileName(fileName) {
     }
 
@@ -110,10 +118,26 @@ public:
     }
 };
 
-int gettingStart() {
-    int input{};
+std::istream& operator>>(std::istream& in, TextEditor::Type& type) {
+    int tempType{};
+    in >> tempType;
 
-    while (input <= 0 || input > 4) {
+    switch (tempType) {
+        case 1: type = TextEditor::readText; break;
+        case 2: type = TextEditor::writeText; break;
+        case 3: type = TextEditor::deleteText; break;
+        case 4: type = TextEditor::escape; break;
+        default: type = TextEditor::notFound; break;
+    }
+
+    return in;
+}
+
+
+TextEditor::Type gettingStart() {
+    TextEditor::Type input{ TextEditor::notFound };
+
+    while (input == TextEditor::notFound) {
         std::cout << "Press 1 if you want to see the whole text, 2 to write, 3 for delete a text, and 4 to escape: \n";
         std::cin >> input;
 
@@ -137,20 +161,20 @@ int main() {
     editor.createFile();
 
     while (true) {
-        const int input{gettingStart()};
-
-        if (input == 1) {
-            editor.readFile();
+        switch (const TextEditor::Type input{gettingStart()}) {
+            case TextEditor::readText:
+                editor.readFile();
+            case TextEditor::writeText:
+                editor.writeFile();
+            case TextEditor::deleteText:
+                editor.deleteTodo();
+            case TextEditor::escape:
+                break;
+            default:
+                std::cout << "Invalid input. Please try again.\n";
+                break;
         }
-        if (input == 2) {
-            editor.writeFile();
-        }
-        if (input == 3) {
-            editor.deleteTodo();
-        }
-        if (input == 4) {
-            break;
-        }
+        break;
     }
 
     return EXIT_SUCCESS;
