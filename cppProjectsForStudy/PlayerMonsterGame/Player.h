@@ -4,7 +4,7 @@
 class Monster;
 
 struct HealPotion {
-    int hpRegen{ 70 };
+    double hpRegen{ 70 };
     int amount{ 0 };
 };
 
@@ -36,6 +36,9 @@ public:
 
     double getHP() const { return m_hp; }
     void setHP(const int hp) { m_hp = hp; }
+    bool getArmor() const { return m_armor; }
+    void setArmor(const bool armor) { m_armor = armor; }
+    void useHeal();
 };
 
 #endif //PLAYER_H

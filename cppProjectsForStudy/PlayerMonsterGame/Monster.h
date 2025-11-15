@@ -14,14 +14,15 @@ public:
 private:
     double m_hp{};
     Type m_type{};
-    int attack{};
+    double m_attack{};
 
 public:
-    Monster(const double hp, const Type type, int attack = 90) : m_hp(hp), m_type(type) {}
+    Monster(const double hp, const Type type, double attack = 90) : m_hp(hp), m_type(type), m_attack(attack) {}
     Type getType() const { return m_type; }
     double getHP() const { return m_hp; }
     void setHP(const double hp) { m_hp = hp; }
-    // void attackEnemy(const Player& player);
+    void attackEnemy(Player& player);
+    int getAttack() const {return m_attack; };
 };
 
 #endif //MONSTER_H
