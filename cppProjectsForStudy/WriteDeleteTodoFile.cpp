@@ -164,10 +164,13 @@ int main() {
         switch (const TextEditor::Type input{gettingStart()}) {
             case TextEditor::readText:
                 editor.readFile();
+                continue;
             case TextEditor::writeText:
                 editor.writeFile();
+                continue;
             case TextEditor::deleteText:
                 editor.deleteTodo();
+                continue;
             case TextEditor::escape:
                 break;
             default:
