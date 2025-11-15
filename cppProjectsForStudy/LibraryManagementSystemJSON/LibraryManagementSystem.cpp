@@ -20,7 +20,7 @@ public:
         std::cout << "Book now in JSON format" << '\n';
     }
 
-    const json& getBookJSON() {
+    const json& getBookJSON() const {
         std::cout << "Returning JSON book: " << m_title << '\n';
         return m_jsonBook;
     }
