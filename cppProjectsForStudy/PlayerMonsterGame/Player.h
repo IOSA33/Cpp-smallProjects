@@ -39,6 +39,7 @@ public:
     bool getArmor() const { return m_armor; }
     void setArmor(const bool armor) { m_armor = armor; }
     void useHeal();
+    int getHealAmount() const {return m_healPotion.amount; }
 };
 
 #endif //PLAYER_H
