@@ -17,6 +17,7 @@ public:
     std::string getName() const { return m_name; }
     int getPopulation() const {return m_population;};
     bool isVisited() const {return m_visited;};
+    void setVisited() {m_visited = true;};
 };
 
 
@@ -29,6 +30,7 @@ class GraphMap {
 public:
     void setCityOnMap(City* x, City* y);
     void printGraph() const;
+    void setVisited(City* x);
 };
 
 #endif //GRAPHMAP_H

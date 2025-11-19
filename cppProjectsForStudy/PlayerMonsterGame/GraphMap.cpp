@@ -1,7 +1,5 @@
 #include "GraphMap.h"
-
 #include <iostream>
-#include <bits/ostream.tcc>
 
 void GraphMap::setCityOnMap(City* x, City* y) {
     // Adding the edge between x and y
@@ -26,20 +24,26 @@ void GraphMap::printGraph() const {
     }
 }
 
-int main() {
-    GraphMap g;
-
-    City* c1 = new City{"The castle", 12500, true};
-    City* c2 = new City{"The boiled", 405, false};
-    City* c3 = new City{"Closest sun", 1023, false};
-
-    g.setCityOnMap(c1, c2);
-    g.setCityOnMap(c1, c3);
-    g.printGraph();
-
-    delete c1;
-    delete c2;
-    delete c3;
-
-    return 0;
+void GraphMap::setVisited(City *x) {
+    x->setVisited();
+    std::cout << x->getName() << " is now visited! Congrats!" << std::endl;
 }
+
+// int main() {
+//     GraphMap g;
+//     City* c1 = new City{"The castle", 12500, true};
+//     City* c2 = new City{"The boiled", 405, false};
+//     City* c3 = new City{"Closest sun", 1023, false};
+//
+//     g.setCityOnMap(c1, c2);
+//     g.setCityOnMap(c1, c3);
+//     g.printGraph();
+//     g.setVisited(c2);
+//     g.printGraph();
+//
+//     delete c1;
+//     delete c2;
+//     delete c3;
+//
+//     return 0;
+// }
