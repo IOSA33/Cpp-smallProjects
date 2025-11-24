@@ -4,22 +4,29 @@
 #include <vector>
 
 namespace MinMax{
-    constexpr int max = 1000;
+    constexpr int max = 100;
     constexpr int min = 0;
     constexpr int vecSize = 100;
+    constexpr int tests = 10;
 };
 
 bool binarySearchVector(const std::vector<int>& v, const int value) {
     int left { 0 };
     int right { static_cast<int>(v.size()) - 1 };
+    
+    int count { 0 };
+    
+    std::cout << "Searching for a value: " << value << '\n';
 
     while (left <= right) {
         const int mid = (right + left) / 2;
-        std::cout << mid << '\n';
+        ++count;
 
-        if (v[mid] == value)
+        if (v[mid] == value) {
+            std::cout << "Binary Search count: " << count << '\n';
+            std::cout << "Value Founds! \n";
             return true;
-
+        }
         if (v[mid] > value)
             right = mid - 1;
 
@@ -27,7 +34,8 @@ bool binarySearchVector(const std::vector<int>& v, const int value) {
             left = mid + 1;
         }
     }
-
+    std::cout << "Binary Search count: " << count << '\n';
+    std::cout << "Value Not Found! \n";
     return false;
 }
 
@@ -35,7 +43,7 @@ int main() {
     std::random_device rd; // non-deterministic generator
     std::mt19937 gen(rd()); // to seed mersenne twister
     std::uniform_int_distribution<> dist(MinMax::min, MinMax::max); // distribute results between 0 and 1000
-
+    
     std::vector<int> vec{};
     vec.reserve(MinMax::vecSize);
 
@@ -46,10 +54,13 @@ int main() {
     std::ranges::sort(vec);
 
     std::cout << "Vector length is: " << vec.size() << '\n';
-    std::cout << "Searching for: ";
-    int input{};
-    std::cin >> input;
-    const bool result { binarySearchVector(vec, input) };
-    std::cout << "Found: " << result <<std::endl;
+    std::cout << '\n';
+    
+    for (int i{ 1 }; i <= MinMax::tests; ++i) {
+        std::cout << "Test number: " << i << '\n';
+        binarySearchVector(vec, dist(gen));
+        std::cout << std::endl;
+    }
+    
     return 0;
 }
