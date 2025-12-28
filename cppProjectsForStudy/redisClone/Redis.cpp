@@ -38,8 +38,7 @@ const std::string Redis::parser(const std::string& s) {
 
     if (vec[0] == "SET") {
         if (vec.size() > 2) {
-           setValue(vec[1], vec[2]);
-           return "OK";
+           return setValue(vec[1], vec[2]);
         } else {
             return "SET has less than 3 arguments";
         }
@@ -51,17 +50,28 @@ const std::string Redis::parser(const std::string& s) {
         }
     }
 
-    return "Error in Redis::parser(): unknow Command";
+    return "Error in Redis::parser(): unknown Command";
 }
 
-void Redis::setValue(const std::string& key, const std::string& value) {
-    m_umap.insert({key, value});
+std::string Redis::setValue(const std::string& key, const std::string& value) {
+    auto it { m_umap.insert({key, {{m_timer.now() + m_expireAfterSeconds, value}}}) };
+    if (it.second == true) {
+        return "OK";
+    } else {
+        return "Error in Redis::setValue(): Key already exists";
+    }
 }
 
 std::string Redis::getValue(const std::string& key) const {
     auto it { m_umap.find(key) };
     if (it != m_umap.end()) {
-        return it->second;
+        for (const auto& [double_key, string_value]: it->second) {
+            if (double_key > m_timer.now()) {
+                return string_value;
+            } else {
+                return "Key is expired!";
+            }
+        }
     }
-    return "Error getValue(): no such Key";
+    return "Error in Redis::getValue(): no such Key";
 }
