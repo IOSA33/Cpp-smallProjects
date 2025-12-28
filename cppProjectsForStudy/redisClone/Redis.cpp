@@ -5,21 +5,27 @@
 #include "Redis.h"
 
 // Commands:
-// SET [key] [value] : returns "OK"
+// SET [key] [value] *[expire] : returns "OK"
 // GET [key] : returns "value"
+// DELETE [key] : returns "Deleted Successfully!"
+// exit : exists the program
 
 void Redis::run() {
     while(true) {
-        std::cout << "Write a command SET [key] [value] or GET [key]\n";
+        std::cout << "\nWrite a command: \n";
+        std::cout << "1: SET [key] [value] *[expire]\n";
+        std::cout << "2: GET [key]\n";
+        std::cout << "3: DELETE [key]\n";
+
         std::string input{};
         std::getline(std::cin >> std::ws, input);
 
         const std::string response { parser(input) };
-
-        std::cout << response << '\n';
         if (response == "exit") {
+            std::cout << "See you and Happy life :)" << std::endl;
             return;
         }
+        std::cout << response << '\n';
     }
 }
 
@@ -32,8 +38,10 @@ const std::string Redis::parser(const std::string& s) {
             word.push_back(i);
             continue;
         }
-        vec.emplace_back(word);
-        word.clear();
+        if (!word.empty()) {
+            vec.emplace_back(word);
+            word.clear();
+        }
     }
 
     if (!word.empty()) {
@@ -46,11 +54,21 @@ const std::string Redis::parser(const std::string& s) {
 
     if (vec[0] == "SET") {
         if (vec.size() > 2) {
-           return setValue(vec[1], vec[2]);
+            if (vec.size() == 4) {
+                if (isStringDigit(vec[3])) {
+                    return setValue(vec[1], vec[2], std::stod(vec[3]));
+                } else {
+                    return "ExpireTime is not a digit!";
+                }
+                
+            } else {
+                return setValue(vec[1], vec[2]);
+            }
         } else {
-            return "SET has less than 3 arguments";
+            return "SET has less than a 3 arguments";
         }
-    } else if (vec[0] == "GET") {
+    } 
+    if (vec[0] == "GET") {
         if (vec.size() >= 2) {
             auto result { getValue(vec[1]) };
             if (result.second == Err::NoError) {
@@ -64,15 +82,34 @@ const std::string Redis::parser(const std::string& s) {
                 }
             }
         } else {
-            return "GET has less than 2 args";
+            return "GET has less than a 2 arguments";
         }
+    }
+    if (vec[0] == "DELETE") {
+        if (vec.size() >= 2) {
+            if (deleteValue(vec[1])) {
+                return "Deleted Successfully!";
+            } else {
+                return "Error in Redis::parser()/deleteValue(): Cannot delete a key!";
+            }
+        }
+        return "DELETE has less than a 2 arguments";
     }
 
     return "Error in Redis::parser(): unknown Command";
 }
 
-std::string Redis::setValue(const std::string& key, const std::string& value) {
-    auto it { m_umap.insert({key, {{m_timer.now() + m_expireAfterSeconds, value}}}) };
+bool Redis::deleteValue(const std::string& key) {
+    auto result { m_umap.erase(key) };
+    if (result) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+std::string Redis::setValue(const std::string& key, const std::string& value, double exprireAfter) {
+    auto it { m_umap.insert({key, {{m_timer.now() + exprireAfter, value}}}) };
     if (it.second == true) {
         return "OK";
     } else {
@@ -94,11 +131,14 @@ std::pair<std::string, Err::Type> Redis::getValue(const std::string& key) const 
     return std::make_pair("Error in Redis::getValue(): no such Key", Err::NoSuchKey);
 }
 
-void Redis::deleteValue(const std::string& key) {
-    auto result { m_umap.erase(key) };
-    if (result) {
-        std::cout << "Key: \"" << key << "\" is deleted!\n";
-    } else {
-        std::cout << "Error in Redis::deleteValue(): Cannot delete a key!\n";
+bool Redis::isStringDigit(const std::string& input) {
+    for (const auto& c: input) {
+        if (!std::isdigit(c)){
+            return false;
+        }
     }
+    return true;
 }
+
+
+// Pretty cool :)

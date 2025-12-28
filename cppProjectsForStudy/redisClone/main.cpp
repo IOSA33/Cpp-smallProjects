@@ -2,7 +2,7 @@
 #include "Redis.h"
 
 int main() {
-    std::cout << "Welcome to the Redis analogy!\n";
+    std::cout << "Glad to see you!\n";
     Redis redis{};
     redis.run();
 }
