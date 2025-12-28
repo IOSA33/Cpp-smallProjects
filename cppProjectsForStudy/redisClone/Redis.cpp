@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <utility>
 #include "Redis.h"
 
 // Commands:
@@ -16,6 +17,9 @@ void Redis::run() {
         const std::string response { parser(input) };
 
         std::cout << response << '\n';
+        if (response == "exit") {
+            return;
+        }
     }
 }
 
@@ -36,6 +40,10 @@ const std::string Redis::parser(const std::string& s) {
         vec.emplace_back(word);
     }
 
+    if (vec[0] == "exit") {
+        return "exit";
+    }
+
     if (vec[0] == "SET") {
         if (vec.size() > 2) {
            return setValue(vec[1], vec[2]);
@@ -44,7 +52,17 @@ const std::string Redis::parser(const std::string& s) {
         }
     } else if (vec[0] == "GET") {
         if (vec.size() >= 2) {
-            return getValue(vec[1]);
+            auto result { getValue(vec[1]) };
+            if (result.second == Err::NoError) {
+                return result.first;
+            } else {
+                if (result.second == Err::NoSuchKey) {
+                    return result.first;
+                } else {
+                    deleteValue(vec[1]);
+                    return result.first;
+                }
+            }
         } else {
             return "GET has less than 2 args";
         }
@@ -62,16 +80,25 @@ std::string Redis::setValue(const std::string& key, const std::string& value) {
     }
 }
 
-std::string Redis::getValue(const std::string& key) const {
+std::pair<std::string, Err::Type> Redis::getValue(const std::string& key) const {
     auto it { m_umap.find(key) };
     if (it != m_umap.end()) {
         for (const auto& [double_key, string_value]: it->second) {
             if (double_key > m_timer.now()) {
-                return string_value;
+                return std::make_pair(string_value, Err::NoError);
             } else {
-                return "Key is expired!";
+                return std::make_pair("Key is expired!", Err::Expired);
             }
         }
     }
-    return "Error in Redis::getValue(): no such Key";
+    return std::make_pair("Error in Redis::getValue(): no such Key", Err::NoSuchKey);
+}
+
+void Redis::deleteValue(const std::string& key) {
+    auto result { m_umap.erase(key) };
+    if (result) {
+        std::cout << "Key: \"" << key << "\" is deleted!\n";
+    } else {
+        std::cout << "Error in Redis::deleteValue(): Cannot delete a key!\n";
+    }
 }
