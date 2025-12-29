@@ -3,11 +3,13 @@
 #include <string>
 #include <utility>
 #include "Redis.h"
+#include "Logger.h"
 
 // Commands:
 // SET [key] [value] *[expire] : returns "OK"
 // GET [key] : returns "value"
 // DELETE [key] : returns "Deleted Successfully!"
+// SAVE : saves explicitly logs to the file
 // exit : exists the program
 
 void Redis::run() {
@@ -56,12 +58,14 @@ const std::string Redis::parser(const std::string& s) {
         if (vec.size() > 2) {
             if (vec.size() == 4) {
                 if (isStringDigit(vec[3])) {
+                    m_logger.saveToFile(vec);
                     return setValue(vec[1], vec[2], std::stod(vec[3]));
                 } else {
                     return "ExpireTime is not a digit!";
                 }
                 
             } else {
+                m_logger.saveToFile(vec);
                 return setValue(vec[1], vec[2]);
             }
         } else {

@@ -3,6 +3,6 @@
 
 int main() {
     std::cout << "Glad to see you!\n";
-    Redis redis{};
+    Redis redis{"Test.txt"};
     redis.run();
 }

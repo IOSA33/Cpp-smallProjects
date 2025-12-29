@@ -4,6 +4,7 @@
 #include <string>
 #include <utility>
 #include "Timer.h"
+#include "Logger.h"
 
 namespace Err{
     enum Type{
@@ -17,14 +18,15 @@ namespace Err{
 class Redis {
 private:
     Timer m_timer{};
+    Logger m_logger;
     std::unordered_map<std::string, std::unordered_map<double, std::string>> m_umap{};
 
 public:
     // TODO: textfile path constructor
-    // TODO: LogFile, after two events and after SAVE
+    // TODO: LogFile, after SAVE
     // TODO: ReadFile
     // TODO: AOF, save history of commands
-    Redis() = default;
+    Redis(const std::string& pathToFile) : m_logger(pathToFile) {} 
     ~Redis() {
     //    writeToLog();
     }
