@@ -53,59 +53,56 @@ int TCPServer::run() {
         acceptSocket = accept(in, NULL, NULL);
         if(acceptSocket == INVALID_SOCKET) {
             std::cout << "accept failed:" << WSAGetLastError() << std::endl;
+            closesocket(in);
             WSACleanup();
             return 1;
         } else { 
-            std::cout << "accept() is working" << std::endl; 
+            std::cout << "Client is connected!" << std::endl; 
         } 
         
-        // recv() Receives data from the client
-        char recvBuf[1024];
-        int recvBuflen = sizeof(recvBuf);
+        // Loop for communicationg between user
+        while(true) {
+            // recv() Receives data from the client
+            char recvBuf[1024];
+            int recvBuflen = sizeof(recvBuf);
+            ZeroMemory(recvBuf, 1024);
 
-        int bytesRecv = recv(acceptSocket, recvBuf, recvBuflen, 0);
-        if (bytesRecv > 0) {
+            int bytesRecv = recv(acceptSocket, recvBuf, recvBuflen, 0);
+            if (bytesRecv > 0) {
+                // Handling request on server
+                std::string input(recvBuf, bytesRecv);
 
-            // Handling request on server
-            std::string input{};
-            for (const auto& i: recvBuf) {
-                if (i == ' ') {
-                    break;
+                std::cout << "(User input): [" << input << "]\n";
+                std::cout << "Recieved bytes from user: [" << bytesRecv << "]\n";
+                std::string response{};
+                // If input is correct
+                if (m_redis.parser(input)) {
+                    response = m_redis.executeValidCmd(Log::Logging);
+                    std::cout << "(Response to the user): [" << response << "]\n";
+                    m_redis.clearCurrCmd();
+                } else {
+                    response = "Unknown command";
+                    std::cout << '\n';
+                    m_redis.clearCurrCmd();
                 }
-                input.push_back(i);
-            }
 
-            std::cout << "(User input) Server side Log: " << input << '\n';
-
-            std::string response{};
-            // If input is correct
-            if (m_redis.parser(input)) {
-                response = m_redis.executeValidCmd(Log::Logging);
-                if (response == "exit") {
-                    std::cout << "See you and Happy life :)" << std::endl;
-                    return;
+                // Sending back to the client response
+                int bytes_sent = send(acceptSocket, response.c_str(), response.size(), 0);
+                if (bytes_sent == SOCKET_ERROR) {
+                    // If sending fails, print an error
+                    std::cerr << "send failed: " << WSAGetLastError() << std::endl;
+                } else {
+                    // Print the number of bytes sent
+                    std::cout << "Sent bytes to the user: [" << bytes_sent << "] " << std::endl;
                 }
-                std::cout << "Server side Log: " << response << '\n';
-                m_redis.clearCurrCmd();
+
+                input.clear();
             } else {
-                m_redis.clearCurrCmd();
+                // If no data is received, print an error message
+                std::cout << "recv failed: " << WSAGetLastError() << '\n';
+                std::cout << "User disconnected" << '\n';
+                break;
             }
-
-
-            // Sending back to the client response
-            int bytes_sent = send(acceptSocket, response.c_str(), response.size(), 0);
-            if (bytes_sent == SOCKET_ERROR) {
-                // If sending fails, print an error
-                std::cerr << "send failed: " << WSAGetLastError() << std::endl;
-            } else {
-                // Print the number of bytes sent
-                std::cout << "Sent " << bytes_sent << " bytes to client." << std::endl;
-            }
-
-            input.clear();
-        } else {
-            // If no data is received, print an error message
-            std::cerr << "recv failed: " << WSAGetLastError() << std::endl;
         }
     }
 
