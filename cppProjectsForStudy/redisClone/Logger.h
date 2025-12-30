@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 class Logger {
 private:
@@ -13,4 +14,5 @@ public:
 
     void saveToFile(const std::vector<std::string>& vecLine);
     void analyzeFile();
+    const std::string& getFilePath() { return m_filePath; }
 };

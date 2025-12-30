@@ -20,22 +20,23 @@ private:
     Timer m_timer{};
     Logger m_logger;
     std::unordered_map<std::string, std::unordered_map<double, std::string>> m_umap{};
+    std::vector<std::string> m_currValidCmd{};
 
 public:
-    // TODO: textfile path constructor
-    // TODO: LogFile, after SAVE
-    // TODO: ReadFile
-    // TODO: AOF, save history of commands
-    Redis(const std::string& pathToFile) : m_logger(pathToFile) {} 
+    Redis(const std::string& pathToFile) : m_logger(pathToFile) {
+        readFromFile();
+    } 
     ~Redis() {
-    //    writeToLog();
+        //m_logger.analyzeFile();
     }
 
     void run();
     // Returns response code
-    const std::string parser(const std::string& input);
+    bool parser(const std::string& input);
+    std::string executeValidCmd(int code);
     std::string setValue(const std::string& key, const std::string& value, double exprireAfter = 10.0);
     std::pair<std::string, Err::Type> getValue(const std::string& key) const;
     bool deleteValue(const std::string& key);
     bool isStringDigit(const std::string& input);
+    void readFromFile();
 };

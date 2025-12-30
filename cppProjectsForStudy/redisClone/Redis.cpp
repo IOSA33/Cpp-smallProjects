@@ -2,8 +2,8 @@
 #include <vector>
 #include <string>
 #include <utility>
+#include <fstream>
 #include "Redis.h"
-#include "Logger.h"
 
 // Commands:
 // SET [key] [value] *[expire] : returns "OK"
@@ -22,16 +22,78 @@ void Redis::run() {
         std::string input{};
         std::getline(std::cin >> std::ws, input);
 
-        const std::string response { parser(input) };
-        if (response == "exit") {
-            std::cout << "See you and Happy life :)" << std::endl;
-            return;
+        // If input is correct
+        if (parser(input)) {
+            const std::string response { executeValidCmd(1) };
+            if (response == "exit") {
+                std::cout << "See you and Happy life :)" << std::endl;
+                return;
+            }
+            std::cout << response << '\n';
+            m_currValidCmd.clear();
+        } else {
+            m_currValidCmd.clear();
         }
-        std::cout << response << '\n';
     }
 }
 
-const std::string Redis::parser(const std::string& s) {
+std::string Redis::executeValidCmd(int code) {
+    if (m_currValidCmd[0] == "exit") {
+        std::cout << "\n";
+        return "exit";
+    }
+
+    if (m_currValidCmd[0] == "SET") {
+        if (code == 1)
+            std::cout << "\n";
+        if (m_currValidCmd.size() == 4) {
+            if (isStringDigit(m_currValidCmd[3])) {
+                if (code == 1)
+                    m_logger.saveToFile(m_currValidCmd);
+
+                return setValue(m_currValidCmd[1], m_currValidCmd[2], std::stod(m_currValidCmd[3]));
+            }
+        } else {
+            if (code == 1)
+                m_logger.saveToFile(m_currValidCmd);
+
+            return setValue(m_currValidCmd[1], m_currValidCmd[2]);
+        }
+    }
+
+    if (m_currValidCmd[0] == "GET") {
+        std::cout << "\n";
+        auto result { getValue(m_currValidCmd[1]) };
+        if (result.second == Err::NoError) {
+            return result.first;
+        } else {
+            if (result.second == Err::NoSuchKey) {
+                return result.first;
+            } else {
+                deleteValue(m_currValidCmd[1]);
+                return result.first;
+            }
+        }
+    }
+
+    if (m_currValidCmd[0] == "DELETE") {
+        if (code == 1)
+            std::cout << "\n";
+        if (deleteValue(m_currValidCmd[1])) {
+            if (code == 1)
+                m_logger.saveToFile(m_currValidCmd);
+
+            return "Deleted Successfully!";
+        } else {
+            return "Error in Redis::executeValidCmd()/deleteValue(): Cannot delete a key!";
+        }
+        return "DELETE has less than a 2 arguments";
+    }
+
+    return "Error in Redis::executeValidCmd(): unknown Command";
+}
+
+bool Redis::parser(const std::string& s) {
     std::vector<std::string> vec{};
     std::string word{};
 
@@ -51,56 +113,57 @@ const std::string Redis::parser(const std::string& s) {
     }
 
     if (vec[0] == "exit") {
-        return "exit";
+        m_currValidCmd.emplace_back(vec[0]);
+        return true;
     }
 
     if (vec[0] == "SET") {
-        if (vec.size() > 2) {
+        if (vec.size() > 2 && vec.size() < 5) {
             if (vec.size() == 4) {
                 if (isStringDigit(vec[3])) {
-                    m_logger.saveToFile(vec);
-                    return setValue(vec[1], vec[2], std::stod(vec[3]));
+                    for (size_t valid = 0; valid < 4; ++valid) {
+                        m_currValidCmd.emplace_back(vec[valid]);
+                    }
+                    return true;
                 } else {
-                    return "ExpireTime is not a digit!";
+                    std::cout << "ExpireTime is not a digit!" << '\n';
+                    return false;
                 }
-                
             } else {
-                m_logger.saveToFile(vec);
-                return setValue(vec[1], vec[2]);
+                for (size_t valid = 0; valid < 3; ++valid) {
+                    m_currValidCmd.emplace_back(vec[valid]);
+                }
+                return true;
             }
         } else {
-            return "SET has less than a 3 arguments";
+            std::cout << "SET has less/more than a 3-4 arguments" << '\n';
+            return false;
         }
-    } 
+    }
     if (vec[0] == "GET") {
-        if (vec.size() >= 2) {
-            auto result { getValue(vec[1]) };
-            if (result.second == Err::NoError) {
-                return result.first;
-            } else {
-                if (result.second == Err::NoSuchKey) {
-                    return result.first;
-                } else {
-                    deleteValue(vec[1]);
-                    return result.first;
-                }
+        if (vec.size() == 2) {
+            for (size_t valid = 0; valid < 2; ++valid) {
+                m_currValidCmd.emplace_back(vec[valid]);
             }
+            return true;
         } else {
-            return "GET has less than a 2 arguments";
+            std::cout << "GET has less/more than a 2 arguments" << '\n';
+            return false;
         }
     }
     if (vec[0] == "DELETE") {
-        if (vec.size() >= 2) {
-            if (deleteValue(vec[1])) {
-                return "Deleted Successfully!";
-            } else {
-                return "Error in Redis::parser()/deleteValue(): Cannot delete a key!";
+        if (vec.size() == 2) {
+            for (size_t valid = 0; valid < 2; ++valid) {
+                m_currValidCmd.emplace_back(vec[valid]);
             }
+            return true;
+        } else {
+            std::cout << "DELETE has less/more than a 2 arguments" << '\n';
+            return false;
         }
-        return "DELETE has less than a 2 arguments";
     }
-
-    return "Error in Redis::parser(): unknown Command";
+    std::cout << "Error in Redis::parser(): unknown Command" << '\n';
+    return false;
 }
 
 bool Redis::deleteValue(const std::string& key) {
@@ -117,7 +180,13 @@ std::string Redis::setValue(const std::string& key, const std::string& value, do
     if (it.second == true) {
         return "OK";
     } else {
-        return "Error in Redis::setValue(): Key already exists";
+        auto it { m_umap.find(key) };
+        if (it != m_umap.end()) {
+            for (auto& [double_key, string_value]: it->second) {
+                string_value = value;
+            }
+        }
+        return "Overrided: OK";
     }
 }
 
@@ -144,5 +213,23 @@ bool Redis::isStringDigit(const std::string& input) {
     return true;
 }
 
+
+void Redis::readFromFile() {
+    std::ifstream file { m_logger.getFilePath() };
+
+    if (!file.is_open()) {
+        std::cout << "Error in Logger::readFromFile(): Cannot open a file!\n";
+        return;
+    }
+
+    std::string inputLine{};
+
+    while (std::getline(file, inputLine)) {
+        if (parser(inputLine)) {
+            executeValidCmd(0);
+        }
+        m_currValidCmd.clear();
+    }
+}
 
 // Pretty cool :)
