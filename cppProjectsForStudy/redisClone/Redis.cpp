@@ -4,6 +4,7 @@
 #include <utility>
 #include <fstream>
 #include "Redis.h"
+#include "NetWork/Server.h"
 
 // Commands:
 // SET [key] [value] *[expire] : returns "OK"
@@ -12,6 +13,7 @@
 // SAVE : saves explicitly logs to the file
 // exit : exists the program
 
+// For local run without Server
 void Redis::run() {
     while(true) {
         std::cout << "\nWrite a command: \n";
@@ -24,7 +26,7 @@ void Redis::run() {
 
         // If input is correct
         if (parser(input)) {
-            const std::string response { executeValidCmd(1) };
+            const std::string response { executeValidCmd(Log::Logging) };
             if (response == "exit") {
                 std::cout << "See you and Happy life :)" << std::endl;
                 return;
@@ -37,24 +39,24 @@ void Redis::run() {
     }
 }
 
-std::string Redis::executeValidCmd(int code) {
+std::string Redis::executeValidCmd(Log::Type code) {
     if (m_currValidCmd[0] == "exit") {
         std::cout << "\n";
         return "exit";
     }
 
     if (m_currValidCmd[0] == "SET") {
-        if (code == 1)
+        if (code == Log::Logging)
             std::cout << "\n";
         if (m_currValidCmd.size() == 4) {
             if (isStringDigit(m_currValidCmd[3])) {
-                if (code == 1)
+                if (code == Log::Logging)
                     m_logger.saveToFile(m_currValidCmd);
 
                 return setValue(m_currValidCmd[1], m_currValidCmd[2], std::stod(m_currValidCmd[3]));
             }
         } else {
-            if (code == 1)
+            if (code == Log::Logging)
                 m_logger.saveToFile(m_currValidCmd);
 
             return setValue(m_currValidCmd[1], m_currValidCmd[2]);
@@ -77,10 +79,10 @@ std::string Redis::executeValidCmd(int code) {
     }
 
     if (m_currValidCmd[0] == "DELETE") {
-        if (code == 1)
+        if (code == Log::Logging)
             std::cout << "\n";
         if (deleteValue(m_currValidCmd[1])) {
-            if (code == 1)
+            if (code == Log::Logging)
                 m_logger.saveToFile(m_currValidCmd);
 
             return "Deleted Successfully!";
@@ -226,7 +228,7 @@ void Redis::readFromFile() {
 
     while (std::getline(file, inputLine)) {
         if (parser(inputLine)) {
-            executeValidCmd(0);
+            executeValidCmd(Log::NoLogging);
         }
         m_currValidCmd.clear();
     }

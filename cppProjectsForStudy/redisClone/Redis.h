@@ -15,6 +15,14 @@ namespace Err{
     };
 };
 
+namespace Log{
+    enum Type {
+        Logging,
+        NoLogging,
+        Max_Log_Type
+    };
+};
+
 class Redis {
 private:
     Timer m_timer{};
@@ -23,6 +31,8 @@ private:
     std::vector<std::string> m_currValidCmd{};
 
 public:
+    // Network
+    // AnalyzeFile
     Redis(const std::string& pathToFile) : m_logger(pathToFile) {
         readFromFile();
     } 
@@ -33,10 +43,11 @@ public:
     void run();
     // Returns response code
     bool parser(const std::string& input);
-    std::string executeValidCmd(int code);
+    std::string executeValidCmd(Log::Type code);
     std::string setValue(const std::string& key, const std::string& value, double exprireAfter = 10.0);
     std::pair<std::string, Err::Type> getValue(const std::string& key) const;
     bool deleteValue(const std::string& key);
     bool isStringDigit(const std::string& input);
     void readFromFile();
+    void clearCurrCmd() { m_currValidCmd.clear(); }
 };

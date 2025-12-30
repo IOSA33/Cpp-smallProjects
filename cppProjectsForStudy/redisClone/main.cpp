@@ -1,8 +1,8 @@
 #include <iostream>
-#include "Redis.h"
+#include "NetWork/Server.h"
 
-int main() {
-    std::cout << "Glad to see you!\n";
-    Redis redis{"Test.txt"};
-    redis.run();
+int main(int argc, int arcv[]) {
+    std::cout << "Glad to see you!\n";    
+    TCPServer server{ 8080 };
+    server.run();
 }
