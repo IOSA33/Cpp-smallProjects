@@ -182,13 +182,14 @@ bool Redis::deleteValue(const std::string& key) {
 }
 
 std::string Redis::setValue(const std::string& key, const std::string& value, double exprireAfter, Log::Type log) {
-    std::pair<std::unordered_map<std::string, std::unordered_map<double, std::string>>::iterator, bool> it{};
+    std::pair<std::unordered_map<std::string, PayLoad>::iterator, bool> it{};
+    
     // First if, only for if we read from file, we are setting already exists time 
     if (log == Log::Type::NoLogging) {
-        it = m_umap.insert({key, {{exprireAfter, value}}});
+        it = m_umap.insert({key, {exprireAfter, value}});
     } else {
         // If we do logging, it means that the app is running and we need to set expiretime from now.
-        it = m_umap.insert({key, {{m_timer.now() + exprireAfter, value}}});
+        it = m_umap.insert({key, {m_timer.now() + exprireAfter, value}});
     }
 
     if (it.second == true) {
@@ -196,9 +197,8 @@ std::string Redis::setValue(const std::string& key, const std::string& value, do
     } else {
         auto it { m_umap.find(key) };
         if (it != m_umap.end()) {
-            for (auto& [double_key, string_value]: it->second) {
-                string_value = value;
-            }
+            it->second.TTL = m_timer.now() + exprireAfter;
+            it->second.value = value;
         }
         return "Overrided: OK";
     }
@@ -207,14 +207,12 @@ std::string Redis::setValue(const std::string& key, const std::string& value, do
 std::pair<std::string, Err::Type> Redis::getValue(const std::string& key) const {
     auto it { m_umap.find(key) };
     if (it != m_umap.end()) {
-        for (const auto& [double_key, string_value]: it->second) {
-            std::cout << double_key << " : now = " << m_timer.now() << '\n'; 
-            if (double_key > m_timer.now()) {
-                return std::make_pair(string_value, Err::NoError);
+            std::cout << it->second.TTL << " : now = " << m_timer.now() << '\n'; 
+            if (it->second.TTL > m_timer.now()) {
+                return std::make_pair(it->second.value, Err::NoError);
             } else {
                 return std::make_pair("Key is expired!", Err::Expired);
             }
-        }
     }
     return std::make_pair("Error in Redis::getValue(): no such Key", Err::NoSuchKey);
 }

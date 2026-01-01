@@ -29,11 +29,16 @@ namespace DefaultValues{
     };
 };
 
+struct PayLoad{
+    double TTL{};
+    std::string value{};
+};
+
 class Redis {
 private:
     Timer m_timer{};
     Logger m_logger;
-    std::unordered_map<std::string, std::unordered_map<double, std::string>> m_umap{};
+    std::unordered_map<std::string, PayLoad> m_umap{};
     std::vector<std::string> m_currValidCmd{};
 
 public:
