@@ -23,6 +23,12 @@ namespace Log{
     };
 };
 
+namespace DefaultValues{
+    enum Type {
+        expireAfter = 100
+    };
+};
+
 class Redis {
 private:
     Timer m_timer{};
@@ -44,7 +50,7 @@ public:
     // Returns response code
     bool parser(const std::string& input);
     std::string executeValidCmd(Log::Type code);
-    std::string setValue(const std::string& key, const std::string& value, double exprireAfter = 10.0);
+    std::string setValue(const std::string& key, const std::string& value, double exprireAfter, Log::Type log = Log::Logging);
     std::pair<std::string, Err::Type> getValue(const std::string& key) const;
     bool deleteValue(const std::string& key);
     bool isStringDigit(const std::string& input);
