@@ -42,13 +42,12 @@ private:
     std::vector<std::string> m_currValidCmd{};
 
 public:
-    // Network
-    // AnalyzeFile
-    Redis(const std::string& pathToFile) : m_logger(pathToFile) {
-        readFromFile();
+    Redis(const std::string& pathToFileAOF, const std::string& pathToFileRDB) : m_logger(pathToFileAOF, pathToFileRDB) {
+        readFromFile( m_logger.getFilePathSnapShot() );
+        readFromFile( m_logger.getFilePathAOF() );
     } 
     ~Redis() {
-        //m_logger.analyzeFile();
+        m_logger.snapshot_RDB(m_umap);
     }
 
     void run();
@@ -59,6 +58,6 @@ public:
     std::pair<std::string, Err::Type> getValue(const std::string& key) const;
     bool deleteValue(const std::string& key);
     bool isStringDigit(const std::string& input);
-    void readFromFile();
+    void readFromFile(const std::string& path);
     void clearCurrCmd() { m_currValidCmd.clear(); }
 };

@@ -8,7 +8,7 @@
 #include "Redis.h"
 
 void Logger::saveToFile(const std::vector<std::string>& vecLine, Timer& timer) {
-    std::ofstream path{ m_filePath, std::ios::app};
+    std::ofstream path{ m_filePathAOF, std::ios::app};
 
     if(!path.is_open()) {
         std::cout << "Error in Logger::saveToFile(): Cannot open a file!\n";
@@ -32,11 +32,11 @@ void Logger::saveToFile(const std::vector<std::string>& vecLine, Timer& timer) {
     path.close();
 }
 
-void Logger::analyzeFile() {
-    std::ifstream file { m_filePath };
+void Logger::analyzeFile_AOF() {
+    std::ifstream file { m_filePathAOF };
 
     if (!file.is_open()) {
-        std::cout << "Error in Logger::analyzeFile(): Cannot open a file!\n";
+        std::cout << "Error in Logger::analyzeFile_AOF(): Cannot open a file!\n";
         return;
     }
 
@@ -44,6 +44,24 @@ void Logger::analyzeFile() {
     
 
     while(std::getline(file, inputLine)) {
-        
+        return;
     }
+}
+
+void Logger::snapshot_RDB(const std::unordered_map<std::string, PayLoad>& u_map) {
+    std::ofstream file { m_filePathSnapshot, std::ios::trunc };
+    
+    if (!file.is_open()) {
+        std::cout << "Error in Logger::snapshot_RDB(): Cannot open a file!\n";
+        return;
+    }
+
+    for (const auto& line: u_map) {
+        file << "SET " << line.first << ' ' << line.second.value << ' ' << line.second.TTL << ' ' << '\n';
+    }
+
+    file.close();
+
+    std::ofstream aofFile { m_filePathAOF, std::ios::trunc };
+    aofFile.close();
 }
