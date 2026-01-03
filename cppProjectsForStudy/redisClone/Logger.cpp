@@ -32,22 +32,6 @@ void Logger::saveToFile(const std::vector<std::string>& vecLine, Timer& timer) {
     path.close();
 }
 
-void Logger::analyzeFile_AOF() {
-    std::ifstream file { m_filePathAOF };
-
-    if (!file.is_open()) {
-        std::cout << "Error in Logger::analyzeFile_AOF(): Cannot open a file!\n";
-        return;
-    }
-
-    std::string inputLine{};
-    
-
-    while(std::getline(file, inputLine)) {
-        return;
-    }
-}
-
 void Logger::snapshot_RDB(const std::unordered_map<std::string, PayLoad>& u_map) {
     std::ofstream file { m_filePathSnapshot, std::ios::trunc };
     

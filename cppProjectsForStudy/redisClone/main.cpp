@@ -6,9 +6,9 @@ int main() {
     // TODO: Multiple clients connections
     std::cout << "Glad to see you!\n";    
     
-    Redis redis{"log.txt", "Snapshot.txt"};
-    redis.run();
-    
-    // TCPServer server{ 8080 };
-    // server.run();
+    // Redis redis{"log.txt", "Snapshot.txt"};
+    // redis.run();
+
+    TCPServer server{ 8080 };
+    server.run();
 }
