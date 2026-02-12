@@ -1,6 +1,7 @@
 #include <iostream>
 #include <print>
 #include <cassert>
+#include <initializer_list>
 
 template <typename T>
 class VectorInt {
@@ -14,6 +15,12 @@ public:
         m_data = new T[length]{};
         m_length = length;
     } 
+
+    VectorInt(std::initializer_list<T> list) 
+        : VectorInt(static_cast<int>(list.size())) 
+    {
+        std::copy(list.begin(), list.end(), m_data);
+    }
 
     VectorInt(const VectorInt&) = delete;
     VectorInt& operator=(const VectorInt&) = delete;
@@ -44,8 +51,13 @@ T& VectorInt<T>::operator[](int index){
 int main() {
 
     VectorInt<int> vec { 5 };
-    vec[3] = 3;
-    std::println("Value in index of 3 is {}", vec[3]);
+    vec[0] = 3;
+    std::println("Value in index of 3 is {}", vec[0]);
 
+    VectorInt<double> vec1 { 5.2, 3.1, 2.4, 2.22 };
+    for (int i{ 0 }; i < vec1.getLength(); ++i) {
+        std::print("{} ", vec1[i]);
+    }
+{}
     return EXIT_SUCCESS;
 }
