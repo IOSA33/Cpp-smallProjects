@@ -17,11 +17,11 @@ public:
 
 class Poodle : public Dog {
 public:
-    virtual std::string_view getName() { return "POODLE"; }
+    std::string_view getName() { return "POODLE"; }
 };
 
 int main() {
-    Dog dog{};
+    Poodle dog{};
     Animal& rAnimal{ dog };
     std::cout << rAnimal.getName() << std::endl;
 }
