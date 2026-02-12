@@ -22,9 +22,7 @@ public:
         delete[] m_data;
     }
 
-    T& operator[] (int index) {
-        return m_data[index];
-    }
+    T& operator[] (int index);
 
     void erase() {
         delete[] m_data;
@@ -34,8 +32,15 @@ public:
 
     int getLength() const { return m_length; }
 };
+// Best parctice
+// is just put template func definition in the same file as header
+template <typename T>
+T& VectorInt<T>::operator[](int index){
+    assert(index >= 0 && index < m_length);
+    return m_data[index];
+} 
 
-
+// g++ -std=c++26 ownContainer.cpp -lstdc++exp -o own
 int main() {
 
     VectorInt<int> vec { 5 };
