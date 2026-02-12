@@ -50,10 +50,12 @@ T& VectorInt<T>::operator[](int index){
 // g++ -std=c++26 ownContainer.cpp -lstdc++exp -o own
 int main() {
 
-    VectorInt<int> vec { 5 };
-    vec[0] = 3;
-    std::println("Value in index of 3 is {}", vec[0]);
-
+    // Just allocates 5 int "0" in the memory
+    VectorInt<int> vec(5);
+    vec[3] = 3; // Accessing it
+    std::println("Value in index of 3 is {}", vec[3]);
+    
+    // Constructing a list
     VectorInt<double> vec1 { 5.2, 3.1, 2.4, 2.22 };
     for (int i{ 0 }; i < vec1.getLength(); ++i) {
         std::print("{} ", vec1[i]);
