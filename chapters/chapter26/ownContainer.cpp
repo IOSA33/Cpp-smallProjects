@@ -60,6 +60,6 @@ int main() {
     for (int i{ 0 }; i < vec1.getLength(); ++i) {
         std::print("{} ", vec1[i]);
     }
-{}
+    
     return EXIT_SUCCESS;
 }
