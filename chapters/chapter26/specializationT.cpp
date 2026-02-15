@@ -11,6 +11,9 @@ public:
     }
 };
 
+// We just recompile for specific template the class function
+// if this definition is in header file this should mark as 'inline'.
+// Because explicit function specializations are not implicitly inline.
 template<>
 void Storage<double>::print() {
     std::cout << std::scientific << m_value << '\n';
