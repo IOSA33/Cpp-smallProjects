@@ -23,7 +23,7 @@ public:
     void Start();
     void QueueJob(const std::function<void()>& job);
     void Stop();
-    bool busy();
+    bool taskInQueue();
 };
 
 void ThreadPool::Start() {
@@ -59,7 +59,7 @@ void ThreadPool::QueueJob(const std::function<void()>& job) {
     m_mutex_condition.notify_one();
 }
 
-bool ThreadPool::busy() {
+bool ThreadPool::taskInQueue() {
     bool poolbusy{};
     {
         std::unique_lock<std::mutex> lock(m_queue_mutex);
@@ -111,10 +111,18 @@ int main() {
         std::cout << "Complete 23000ms\n";
     });
 
+    for(int i = 0; i < 10; ++i) {
+        my_threadPool.QueueJob([i] {
+            std::cout << "First Task forloop "<< i << "\n";
+            std::this_thread::sleep_for(1000ms);
+            std::cout << "Complete forloop "<< i << "\n";
+        });
+    }
+
     // Only execute if in queue is some task
-    while (my_threadPool.busy()) {
+    while (my_threadPool.taskInQueue()) {
         std::cout << "Waiting...\n";
-        std::this_thread::sleep_for(100ms);
+        std::this_thread::sleep_for(1000ms);
     }
 
     my_threadPool.Stop();
