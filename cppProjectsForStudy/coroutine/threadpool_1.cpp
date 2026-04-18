@@ -111,6 +111,7 @@ int main() {
         std::cout << "Complete 23000ms\n";
     });
 
+    // Only execute if in queue is some task
     while (my_threadPool.busy()) {
         std::cout << "Waiting...\n";
         std::this_thread::sleep_for(100ms);
