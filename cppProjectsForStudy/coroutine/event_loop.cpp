@@ -3,7 +3,6 @@
 #include <chrono>
 #include <queue>
 #include <array>
-#include <future>
 
 using namespace std::chrono_literals;
 
@@ -23,6 +22,10 @@ struct Task {
         std::cout << "Download 2 is ready!\n";
     }
 };
+
+// This whole try have several issues, first of all is its not concurrent of .join()
+// Second this is pretty expensive to do, we creating all the time new threads .join() them 
+// but overall its good attempt for the first try with basic understanding how it works
 
 int main() {
     std::queue<Task> queue{{{"ip:123312"}, {"ip:342343"}, {"ip:12332312"}}};
