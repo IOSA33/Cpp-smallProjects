@@ -4,14 +4,25 @@
 #include <cstring>
 #include <random>
 
-unsigned long hashing(const std::string& param_string) {
-    unsigned long hash { 5381 };
+constexpr int g_pass_legth { 4 };
+constexpr int g_chain_length { 1000 };
 
-    for (const char& i : param_string) {
-        hash = ((hash << 5) + hash) + static_cast<unsigned char>(i);
+uint32_t hashing(const std::string& str) {
+    uint32_t hash = 2166136261U; 
+    const uint32_t fnv_prime = 16777619U; 
+
+    for (const char& i : str) {
+        hash ^= static_cast<unsigned char>(i);
+        hash *= fnv_prime;
     }
 
+    std::cout << hash << "\n";    
+
     return hash;
+}
+
+std::string reduction(uint32_t hash_value) {
+
 }
 
 int main(int argc, char* argv[]){
@@ -26,9 +37,7 @@ int main(int argc, char* argv[]){
 
     std::map<std::string, int32_t> rainbow_table{};
 
-    std::cout << hashing(argv[1]);
-
-
+    hashing(argv[1]);
 
 
     return EXIT_SUCCESS;
