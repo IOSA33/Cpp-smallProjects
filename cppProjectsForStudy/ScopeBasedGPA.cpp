@@ -15,8 +15,8 @@ int main() {
         }
     };
 
-    for (const auto& i: _u) {
-        std::cout << i.first << " : " << i.second << std::endl;
+    for (const auto& [key, value]: _u) {
+        std::cout << key << " : " << value << std::endl;
     }
 
     return 0;
